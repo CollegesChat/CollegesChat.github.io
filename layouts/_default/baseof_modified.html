@@ -51,13 +51,16 @@
   {{ with .File }}
     {{ $filePath := .Path }}
     {{ $fileDir := .Dir }}
-    {{ if and (hasPrefix $filePath "docs/universities/") (ne (path.Base $filePath) "_index.md") }}
+    {{ $isCurrentUniversity := hasPrefix $filePath "docs/universities/" }}
+    {{ $isArchivedUniversity := hasPrefix $filePath "docs/archived/universities/" }}
+    {{ if and (or $isCurrentUniversity $isArchivedUniversity) (ne (path.Base $filePath) "_index.md") }}
       {{ $dirParts := split (strings.TrimSuffix "/" $fileDir) "/" }}
-      {{ if ge (len $dirParts) 3 }}
-        {{ $province := index $dirParts 2 }}
+      {{ $provinceIndex := cond $isArchivedUniversity 3 2 }}
+      {{ if gt (len $dirParts) $provinceIndex }}
+        {{ $province := index $dirParts $provinceIndex }}
         {{ $sameProvincePages := where site.RegularPages "File.Dir" $fileDir }}
         <nav class="same-province-menu" aria-label="同省学校列表">
-          <div class="same-province-title">{{ $province }}高校</div>
+          <div class="same-province-title">{{ $province }}高校{{ if $isArchivedUniversity }}（归档）{{ end }}</div>
           <ul>
             {{ range sort $sameProvincePages "Title" }}
               <li{{ if eq .RelPermalink $.RelPermalink }} class="active"{{ end }}>
