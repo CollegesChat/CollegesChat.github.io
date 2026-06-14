@@ -6,3 +6,23 @@
   <a href="https://www.mozilla.org/firefox/" target="_blank">Firefox</a>。
   <button id="close-warning">&times;</button>
 </div>
+<script>
+  (function () {
+    function scrollSameProvinceMenuToActiveItem() {
+      var menu = document.querySelector(".same-province-menu");
+      if (!menu) return;
+
+      var activeItem = menu.querySelector("li.active");
+      if (!activeItem) return;
+
+      var targetTop = activeItem.offsetTop - menu.clientHeight / 2 + activeItem.clientHeight / 2;
+      menu.scrollTop = Math.max(0, targetTop);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", scrollSameProvinceMenuToActiveItem);
+    } else {
+      scrollSameProvinceMenuToActiveItem();
+    }
+  })();
+</script>
