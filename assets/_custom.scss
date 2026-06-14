@@ -19,14 +19,23 @@
   color: inherit;
 }
 .book-header {
+  display: contents;
+}
+.book-header > div {
   position: sticky;
   top: 0px;
   z-index: 100;
   background-color: var(--body-background);
 }
+
 @media screen and (max-width: 600px) {
   #university-name {
     display: none;
+  }
+}
+@media (min-width: 1024px) {
+  body > main > div > header > div > h3 {
+    font-size: 36px;
   }
 }
 #browser-warning {
