@@ -18,6 +18,44 @@
   text-decoration: none;
   color: inherit;
 }
+
+.same-province-menu {
+  min-height: 0;
+  margin: 1rem 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.same-province-title {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.25rem 0;
+  margin-bottom: 0.25rem;
+  background: var(--body-background);
+  color: var(--gray-500);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.same-province-menu ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.same-province-menu li a {
+  display: block;
+  padding: 0.2rem 0;
+  overflow: hidden;
+  color: inherit;
+  text-overflow: ellipsis;
+}
+
+.same-province-menu li.active a {
+  color: var(--color-link);
+  font-weight: 700;
+}
 .book-header {
   display: contents;
 }

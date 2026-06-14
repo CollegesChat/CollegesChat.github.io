@@ -48,6 +48,27 @@
   <div class="back-to-home">
     <a href="{{ site.BaseURL }}">← 返回主页</a>
   </div>
+  {{ with .File }}
+    {{ $filePath := .Path }}
+    {{ $fileDir := .Dir }}
+    {{ if and (hasPrefix $filePath "docs/universities/") (ne (path.Base $filePath) "_index.md") }}
+      {{ $dirParts := split (strings.TrimSuffix "/" $fileDir) "/" }}
+      {{ if ge (len $dirParts) 3 }}
+        {{ $province := index $dirParts 2 }}
+        {{ $sameProvincePages := where site.RegularPages "File.Dir" $fileDir }}
+        <nav class="same-province-menu" aria-label="同省学校列表">
+          <div class="same-province-title">{{ $province }}高校</div>
+          <ul>
+            {{ range sort $sameProvincePages "Title" }}
+              <li{{ if eq .RelPermalink $.RelPermalink }} class="active"{{ end }}>
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+              </li>
+            {{ end }}
+          </ul>
+        </nav>
+      {{ end }}
+    {{ end }}
+  {{ end }}
   {{ end }}
   {{ define "header" }}
   {{ partial "docs/header" . }}
