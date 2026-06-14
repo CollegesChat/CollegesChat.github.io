@@ -1,5 +1,11 @@
 # Hugo-Book Starter
+```
+Chrome >= 109
 
+Firefox >= 115
+
+Safari >= 15
+```
 This is a template repository to bootstrap your documentation site with Hugo-Book theme. It contains minimal configured from the start hugo site.
 1. To use this repository create a new repository from this template
 2. Run `git clone --recurse-submodules --shallow-submodules https://github.com/{org/user}/{repository}`

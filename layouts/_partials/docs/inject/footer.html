@@ -1,0 +1,34 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var ua = navigator.userAgent;
+    var warningDiv = document.getElementById("browser-warning");
+    var closeBtn = document.getElementById("close-warning");
+    // console.log(ua, warningDiv, closeBtn);
+    // 1. 檢測是否為舊瀏覽器
+    var isOld = (function () {
+      var chrome = ua.match(/Chrome\/(\d+)/);
+      if (chrome && parseInt(chrome[1]) < 109) return true;
+      var ff = ua.match(/Firefox\/(\d+)/);
+      if (ff && parseInt(ff[1]) < 115) return true;
+      var safari = ua.match(/Version\/(\d+)\.\d+ Safari/);
+      if (safari && parseInt(safari[1]) < 15) return true;
+      return false;
+    })();
+
+    // 2. 決定是否顯示
+    var isDismissed =
+      localStorage.getItem("browser-warning-dismissed") === "true";
+
+    if (isOld && !isDismissed && warningDiv) {
+      warningDiv.style.display = "block";
+    }
+
+    // 3. 綁定關閉事件 (使用事件監聽，並確保按鈕存在)
+    if (closeBtn && warningDiv) {
+      closeBtn.addEventListener("click", function () {
+        warningDiv.style.display = "none";
+        localStorage.setItem("browser-warning-dismissed", "true");
+      });
+    }
+  });
+</script>
