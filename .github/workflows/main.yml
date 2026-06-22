@@ -54,7 +54,9 @@ jobs:
           export LOGURU_COLORIZE=False
           cd generator
           wget https://github.com/CollegesChat/china-university-list/releases/latest/download/output.csv
+          wget https://github.com/CollegesChat/university-information/raw/refs/heads/master/questionnaires/site/docs/index.md
           cat output.csv >> ./required/colleges.csv
+          cat index.md >> ../content/_index.md
           uv sync
           uv run python main.py
           cd ..
