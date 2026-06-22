@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ default .Site.Language.Name .Site.Language.Locale }}"
-      dir="{{ default "ltr" .Site.Language.Direction }}">
+      dir="{{ default " ltr" .Site.Language.Direction }}">
   <head>
     {{ partial "docs/html-head" . }}
     {{ partial "docs/inject/head" . }}
@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ "css/university-spec.css" | relURL }}">
     <link rel="stylesheet" href="{{ "css/fold-paragraphs.css" | relURL }}">
   </head>
-  <body dir="{{ default "ltr" .Site.Language.Direction }}"
+  <body dir="{{ default " ltr" .Site.Language.Direction }}"
         class="book-kind-{{ .Kind }} book-type-{{ .Type }}{{ with .Layout }} book-layout-{{ . }}{{ end }}">
     <input type="checkbox" class="hidden toggle" id="menu-control" />
     <input type="checkbox" class="hidden toggle" id="toc-control" />
@@ -41,101 +41,105 @@
       <a href="{{ $url }}" target="_blank" rel="noopener">↺ 返回旧版</a>
     </div>
     {{ end }}
-  </aside>
-  {{ end }}
-  {{ define "menu" }}
-  {{ partial "docs/search" . }}
-  <div class="back-to-home">
-    <a href="{{ site.BaseURL }}">← 返回主页</a>
   </div>
-  {{ with .File }}
-    {{ $filePath := .Path }}
-    {{ $fileDir := .Dir }}
-    {{ $isCurrentUniversity := hasPrefix $filePath "docs/universities/" }}
-    {{ $isArchivedUniversity := hasPrefix $filePath "docs/archived/universities/" }}
-    {{ if and (or $isCurrentUniversity $isArchivedUniversity) (ne (path.Base $filePath) "_index.md") }}
-      {{ $dirParts := split (strings.TrimSuffix "/" $fileDir) "/" }}
-      {{ $provinceIndex := cond $isArchivedUniversity 3 2 }}
-      {{ if gt (len $dirParts) $provinceIndex }}
-        {{ $province := index $dirParts $provinceIndex }}
-        {{ $sameProvincePages := where site.RegularPages "File.Dir" $fileDir }}
-        <nav class="same-province-menu" aria-label="同省学校列表">
-          <div class="same-province-title">{{ $province }}高校{{ if $isArchivedUniversity }}（归档）{{ end }}</div>
-          <ul>
-            {{ range sort $sameProvincePages "Title" }}
-              <li{{ if eq .RelPermalink $.RelPermalink }} class="active"{{ end }}>
-                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-              </li>
-            {{ end }}
-          </ul>
-        </nav>
-      {{ end }}
+</aside>
+{{ end }}
+{{ define "menu" }}
+{{ partial "docs/search" . }}
+<div class="back-to-home">
+  <a href="{{ site.BaseURL }}">← 返回主页</a>
+</div>
+{{ with .File }}
+{{ $filePath := .Path }}
+{{ $fileDir := .Dir }}
+{{ $isCurrentUniversity := strings.HasPrefix $filePath "docs/universities/" }}
+{{ $isArchivedUniversity := strings.HasPrefix $filePath "docs/archived/universities/" }}
+{{ if and (or $isCurrentUniversity $isArchivedUniversity) $.IsPage }}
+{{ $dirParts := split (strings.TrimSuffix "/" $fileDir) "/" }}
+{{ $provinceIndex := cond $isArchivedUniversity 3 2 }}
+{{ if gt (len $dirParts) $provinceIndex }}
+{{ $province := index $dirParts $provinceIndex }}
+{{ $sameProvincePages := $.Parent.RegularPages }}
+<nav class="same-province-menu" aria-label="同省学校列表">
+  <div class="same-province-title">{{ $province }}高校{{ if $isArchivedUniversity }}（归档）{{ end }}</div>
+  <ul>
+    {{ $currentPage := $ }}
+    {{ range sort $sameProvincePages "Title" }}
+    <li {{ if eq .RelPermalink $currentPage.RelPermalink }}
+        class="active"
+        {{ end }}>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </li>
     {{ end }}
-  {{ end }}
-  {{ end }}
-  {{ define "header" }}
-  {{ partial "docs/header" . }}
-  {{ if partial "docs/toc-show" . }}
-  <aside class="hidden">
-    {{ template "toc" . }}
-  </aside>
-  {{ end }}
-  {{ end }}
-  {{ define "footer" }}
-  {{ partial "docs/footer" . }}
-  {{ end }}
-  {{ define "clipboard" }}
-  {{ with resources.Get "clipboard.js" | resources.Minify }}
-  <script>{{ .Content | safeJS }}</script>
-  {{ end }}
-  {{ end }}
-  {{ define "copyright" }}
-  {{ if or .Site.Copyright .Params.Copyright }}
-  <div class="book-copyright flex justify-center">{{ partial "docs/copyright" . }}</div>
-  {{ end }}
-  {{ end }}
-  {{ define "comments" }}
-  {{ if and .Content (default true (default .Site.Params.BookComments .Params.BookComments)) }}
-  <div class="book-comments">{{- partial "docs/comments" . -}}</div>
-  {{ end }}
-  {{ end }}
-  {{ define "main" }}
-  <article class="markdown book-article">
-    <!--<h1 id="university-name">{{ .Title }}</h1> -->
-    {{- .Content -}}
-    {{- $currentLink := .RelPermalink -}}
-    {{- $relPath := .File.Path -}} {{- $isArchived := hasPrefix $relPath "docs/archived/" -}}
-    {{- if $isArchived -}}
-    {{- $purePath := strings.TrimPrefix "docs/archived/" $relPath -}}
-    {{- $targetRelPath := printf "docs/%s" $purePath -}}
-    {{- $targetFile := printf "content/%s" $targetRelPath -}}
-    {{- $mainLink := strings.TrimPrefix "/archived" $currentLink -}}
-    {{- if os.FileExists $targetFile -}}
-    <div class="book-hint info">
-      📄 本页面已有新版：<a href="{{ $mainLink }}">点击查看最新内容</a>
-    </div>
-    {{- end -}}
-    {{- else -}}
-    {{- $purePath := strings.TrimPrefix "docs/" $relPath -}}
-    {{- $targetRelPath := printf "docs/archived/%s" $purePath -}}
-    {{- $targetFile := printf "content/%s" $targetRelPath -}}
-    {{- $archiveLink := printf "/archived%s" $currentLink -}}
-    {{- $archiveLink = replace $archiveLink "//" "/" -}}
-    {{- if os.FileExists $targetFile -}}
-    <div class="book-hint warning">
-      📦 本页面存在历史存档：<a href="{{ $archiveLink }}">查看历史版本</a>
-    </div>
-    {{- end -}}
-    {{- end -}}
-  </article>
-  {{ end }}
-  {{ define "toc-container" }}
-  {{ if partial "docs/toc-show" . }}
-  <aside class="book-toc">
-    <div class="book-toc-content">{{ template "toc" . }}</div>
-  </aside>
-  {{ end }}
-  {{ end }}
-  {{ define "toc" }}
-  {{ partial "docs/toc" . }}
-  {{ end }}
+  </ul>
+</nav>
+{{ end }}
+{{ end }}
+{{ end }}
+{{ end }}
+{{ define "header" }}
+{{ partial "docs/header" . }}
+{{ if partial "docs/toc-show" . }}
+<aside class="hidden">
+  {{ template "toc" . }}
+</aside>
+{{ end }}
+{{ end }}
+{{ define "footer" }}
+{{ partial "docs/footer" . }}
+{{ end }}
+{{ define "clipboard" }}
+{{ with resources.Get "clipboard.js" | resources.Minify }}
+<script>{ { .Content | safeJS } }</script>
+{{ end }}
+{{ end }}
+{{ define "copyright" }}
+{{ if or .Site.Copyright .Params.Copyright }}
+<div class="book-copyright flex justify-center">{{ partial "docs/copyright" . }}</div>
+{{ end }}
+{{ end }}
+{{ define "comments" }}
+{{ if and .Content (default true (default .Site.Params.BookComments .Params.BookComments)) }}
+<div class="book-comments">{{- partial "docs/comments" . -}}</div>
+{{ end }}
+{{ end }}
+{{ define "main" }}
+<article class="markdown book-article">
+  <!--<h1 id="university-name">{{ .Title }}</h1> -->
+  {{- .Content -}}
+  {{- $currentLink := .RelPermalink -}}
+  {{- $relPath := .File.Path -}} {{- $isArchived := hasPrefix $relPath "docs/archived/" -}}
+  {{- if $isArchived -}}
+  {{- $purePath := strings.TrimPrefix "docs/archived/" $relPath -}}
+  {{- $targetRelPath := printf "docs/%s" $purePath -}}
+  {{- $targetFile := printf "content/%s" $targetRelPath -}}
+  {{- $mainLink := strings.TrimPrefix "/archived" $currentLink -}}
+  {{- if os.FileExists $targetFile -}}
+  <div class="book-hint info">
+    📄 本页面已有新版：<a href="{{ $mainLink }}">点击查看最新内容</a>
+  </div>
+  {{- end -}}
+  {{- else -}}
+  {{- $purePath := strings.TrimPrefix "docs/" $relPath -}}
+  {{- $targetRelPath := printf "docs/archived/%s" $purePath -}}
+  {{- $targetFile := printf "content/%s" $targetRelPath -}}
+  {{- $archiveLink := printf "/archived%s" $currentLink -}}
+  {{- $archiveLink = replace $archiveLink "//" "/" -}}
+  {{- if os.FileExists $targetFile -}}
+  <div class="book-hint warning">
+    📦 本页面存在历史存档：<a href="{{ $archiveLink }}">查看历史版本</a>
+  </div>
+  {{- end -}}
+  {{- end -}}
+</article>
+{{ end }}
+{{ define "toc-container" }}
+{{ if partial "docs/toc-show" . }}
+<aside class="book-toc">
+  <div class="book-toc-content">{{ template "toc" . }}</div>
+</aside>
+{{ end }}
+{{ end }}
+{{ define "toc" }}
+{{ partial "docs/toc" . }}
+{{ end }}
