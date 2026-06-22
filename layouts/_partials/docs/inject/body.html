@@ -6,23 +6,35 @@
   <a href="https://www.mozilla.org/firefox/" target="_blank">Firefox</a>。
   <button id="close-warning">&times;</button>
 </div>
+{{ if strings.Contains .RelPermalink "/universities/" }}
 <script>
-  (function () {
-    function scrollSameProvinceMenuToActiveItem() {
-      var menu = document.querySelector(".same-province-menu");
-      if (!menu) return;
+(function () {
+  function scrollSameProvinceMenuToActiveItem() {
+    var menu = document.querySelector(".same-province-menu");
+    if (!menu) return;
 
-      var activeItem = menu.querySelector("li.active");
-      if (!activeItem) return;
+    var activeItem = menu.querySelector("li.active");
+    if (!activeItem) return;
 
-      var targetTop = activeItem.offsetTop - menu.clientHeight / 2 + activeItem.clientHeight / 2;
-      menu.scrollTop = Math.max(0, targetTop);
-    }
+    // 計算目標滾動位置
+    var targetTop = activeItem.offsetTop - menu.clientHeight / 2 + activeItem.clientHeight / 2;
 
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", scrollSameProvinceMenuToActiveItem);
-    } else {
-      scrollSameProvinceMenuToActiveItem();
-    }
-  })();
+    // 使用原生的 smooth 滾動行為
+    menu.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: "smooth"
+    });
+  }
+
+  // 確保在 DOM 載入以及頁面完全解析後都能正確觸發
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scrollSameProvinceMenuToActiveItem);
+  } else {
+    scrollSameProvinceMenuToActiveItem();
+  }
+
+  // 額外保險：當所有樣式和字體加載完成後再校正一次（防止高度計算錯誤）
+  window.addEventListener("load", scrollSameProvinceMenuToActiveItem);
+})();
 </script>
+{{ end }}
