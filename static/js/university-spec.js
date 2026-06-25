@@ -98,13 +98,21 @@ onDomReady(() => {
     //  移动端专门处理：精准区分“轻点看日期”与“长按 800ms 跳转”
     let longPressTimer = null;
     let isLongPressAction = false;
-
     // 跳转公共函数
-    function triggerReport(id) {
+    function triggerReport(id, el) {
+        const currentBaseUrl = window.location.origin +
+            window.location.pathname + window.location.search;
+
+        const myHighlightUrl = `${currentBaseUrl}#:~:text=${id}`;
+
         window.open(
             `https://github.com/CollegesChat/university-information/issues/new?template=malicious_data.yml&title=${
                 encodeURIComponent(`[数据举报]：${id}`)
-            }&target=${encodeURIComponent(document.querySelector('meta[itemprop="name"]').content)}`,
+            }&target=${
+                encodeURIComponent(
+                    document.querySelector('meta[itemprop="name"]').content,
+                )
+            }&extra=${encodeURIComponent(myHighlightUrl)}`,
             "_blank",
         );
     }
@@ -115,22 +123,18 @@ onDomReady(() => {
 
         isLongPressAction = false;
 
-        // 设置自定义长按定时器：800 毫秒（可根据需要自行调整）
         longPressTimer = setTimeout(() => {
             isLongPressAction = true;
 
-            // 手机微震动反馈（可选，部分安卓支持）
             if (navigator.vibrate) navigator.vibrate(50);
 
-            // 弹出确认框，防止用户在看日期时手抖误触发跳转
             if (confirm(`是否要针对 ID: ${el.dataset.id} 发起数据举报？`)) {
-                triggerReport(el.dataset.id);
+                // 关键改动：把当前点击的元素 el 传过去用来计算前后文
+                triggerReport(el.dataset.id, el);
             }
-            // 触发后隐藏气泡
             el.classList.remove("show-tip");
         }, 800);
     }, { passive: true });
-
     document.addEventListener("touchend", (e) => {
         const el = e.target.closest(".id-link");
 
