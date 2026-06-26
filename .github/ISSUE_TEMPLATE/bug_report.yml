@@ -1,5 +1,5 @@
-name: Bug 反馈
-description: 🐛 报告网站 Bug
+name: 🐛 Bug 反馈
+description: 报告网站 Bug
 title: "[Bug] "
 labels:
   - bug
