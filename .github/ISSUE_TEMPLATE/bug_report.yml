@@ -1,5 +1,5 @@
 name: Bug 反馈
-description: 报告网站 Bug
+description: 🐛 报告网站 Bug
 title: "[Bug] "
 labels:
   - bug
@@ -12,7 +12,7 @@ body:
 
         **请注意：**
         - 本模板仅用于反馈网站 Bug。
-        - 学校信息错误、缺失，请前往 https://github.com/CollegesChat/university-information/issues。
+        - 学校信息错误、缺失，请前往 https://github.com/CollegesChat/university-information/issues 。
 
   - type: dropdown
     id: type
