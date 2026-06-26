@@ -1,0 +1,68 @@
+name: Bug 反馈
+description: 报告网站 Bug
+title: "[Bug] "
+labels:
+  - bug
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您的反馈！
+
+        **请注意：**
+        - 本模板仅用于反馈网站 Bug。
+        - 学校信息错误、缺失，请前往 https://github.com/CollegesChat/university-information/issues。
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Bug 类型
+      options:
+        - 页面显示
+        - 功能异常
+        - 其他
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: 问题页面
+      description: 请填写出现问题的页面链接。
+      placeholder: https://colleges.chat/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 请描述问题，并尽可能提供复现步骤。
+      placeholder: |
+        1. 打开……
+        2. 点击……
+        3. 出现……
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望结果
+      placeholder: 描述你认为应该发生的情况。
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: 浏览器和操作系统
+      description: 如 Chrome 138 / Windows 11、Safari 18 / iOS 26。
+      placeholder: Chrome 138 / Windows 11
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 补充信息
+      description: 可附上截图、录屏、浏览器 Console 报错或其他有助于定位问题的信息。
