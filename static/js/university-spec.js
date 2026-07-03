@@ -26,60 +26,22 @@ onDomReady(() => {
         return `<span class="id-link" data-id="${id}" data-title="回答时间: ${time} (${actionText})">${id}</span>`;
     };
 
-    //  处理并聚合重复回答
+    //  为已有 HTML 中的 ID 添加交互式 span（后端已完成重复回答折叠）
     document.querySelectorAll('h2[id^="q"] + ul').forEach((ul) => {
-        const lis = [...ul.querySelectorAll("li")];
-        if (!lis.length) return;
-
-        const groupsMap = new Map();
-
-        for (const li of lis) {
-            const text = li.textContent.trim();
-            const idMatch = text.match(/A\d+/);
-            const id = idMatch ? idMatch[0] : null;
-            const answer = text.split(/[:：]\s*/).slice(1).join(":").trim() ||
-                text;
-
-            if (!groupsMap.has(answer)) {
-                groupsMap.set(answer, []);
+        ul.querySelectorAll("li").forEach((li) => {
+            const div = li.querySelector("div");
+            if (div) {
+                div.innerHTML = div.textContent.replace(
+                    /A\d+/g,
+                    (id) => makeIdSpan(id, idTimeMap[id] || ""),
+                );
+            } else {
+                li.innerHTML = li.textContent.replace(
+                    /^(A\d+)/,
+                    (_, id) => makeIdSpan(id, idTimeMap[id] || ""),
+                );
             }
-            groupsMap.get(answer).push(id);
-        }
-
-        ul.replaceChildren(
-            ...Array.from(groupsMap.entries()).map(([answer, ids]) => {
-                if (ids.length === 1) {
-                    const li = document.createElement("li");
-                    const time = idTimeMap[ids[0]];
-                    const content = answer;
-                    li.innerHTML = ids[0]
-                        ? `${makeIdSpan(ids[0], time)}: ${content}`
-                        : content;
-                    return li;
-                }
-
-                const li = document.createElement("li");
-                const details = document.createElement("details");
-                const summary = document.createElement("summary");
-                const idContainer = document.createElement("div");
-
-                summary.textContent = `${answer} × ${ids.length}`;
-                summary.style.cursor = "pointer";
-                summary.style.padding = "1rem";
-                details.style.margin = "0";
-                details.style.padding = "0.5rem";
-
-                idContainer.innerHTML = ids
-                    .map((
-                        id,
-                    ) => (idTimeMap[id] ? makeIdSpan(id, idTimeMap[id]) : id))
-                    .join(" ");
-
-                details.append(summary, idContainer);
-                li.append(details);
-                return li;
-            }),
-        );
+        });
     });
 
     //  电脑端：右键直接跳转
