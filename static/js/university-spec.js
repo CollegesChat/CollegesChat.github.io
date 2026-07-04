@@ -28,20 +28,41 @@ onDomReady(() => {
 
     //  为已有 HTML 中的 ID 添加交互式 span（后端已完成重复回答折叠）
     document.querySelectorAll('h2[id^="q"] + ul').forEach((ul) => {
-        ul.querySelectorAll("li").forEach((li) => {
-            const div = li.querySelector("div");
-            if (div) {
-                div.innerHTML = div.textContent.replace(
-                    /A\d+/g,
-                    (id) => makeIdSpan(id, idTimeMap[id] || ""),
-                );
+        for (const li of ul.querySelectorAll(":scope > li")) {
+            const details = li.querySelector("details");
+            if (details) {
+                const innerItems = details.querySelectorAll("p, li");
+                if (innerItems.length) {
+                    innerItems.forEach((el) => {
+                        const text = el.textContent;
+                        if (/^\s*A\d+[:：]/.test(text)) {
+                            el.innerHTML = text.replace(
+                                /^\s*(A\d+)/,
+                                (_, id) => makeIdSpan(id, idTimeMap[id] || ""),
+                            );
+                        } else {
+                            el.innerHTML = text.replace(
+                                /A\d+/g,
+                                (id) => makeIdSpan(id, idTimeMap[id] || ""),
+                            );
+                        }
+                    });
+                } else {
+                    const div = details.querySelector("div");
+                    if (div) {
+                        div.innerHTML = div.textContent.replace(
+                            /A\d+/g,
+                            (id) => makeIdSpan(id, idTimeMap[id] || ""),
+                        );
+                    }
+                }
             } else {
                 li.innerHTML = li.textContent.replace(
-                    /^(A\d+)/,
+                    /^\s*(A\d+)/,
                     (_, id) => makeIdSpan(id, idTimeMap[id] || ""),
                 );
             }
-        });
+        }
     });
 
     //  电脑端：右键直接跳转
