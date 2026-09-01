@@ -1,3 +1,10 @@
+.markdown-inner > ul:first-child{
+  column-count: auto;
+  column-gap: 10px;
+  list-style-position: inside;
+  column-width: 180px;
+}
+
 .markdown ul,
 .markdown ol {
   word-wrap: break-all;
