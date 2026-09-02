@@ -71,6 +71,9 @@ jobs:
           sed -i "s#copyright: \"\$copyright\"#copyright: \"<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank' rel='noopener'>CC BY-NC-SA 4.0</a> | Generated on ${{ env.BUILD_TIME }} (UTC+8)\"#g" hugo.yaml
       - name: Build Static Website
         run: |
+          mkdir data
+          curl -L -o ./data/v1.yaml https://raw.githubusercontent.com/CollegesChat/questionnaire/refs/heads/main/v1.yaml
+          curl -L -o ./data/v2.yaml https://raw.githubusercontent.com/CollegesChat/questionnaire/refs/heads/main/v2.yaml
           hugo build --minify
           cd public
           rm -rf asciinema katex
