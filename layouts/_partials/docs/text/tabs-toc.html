@@ -1,0 +1,34 @@
+{{- /*
+  Builds tab-synchronized TOC markup + :has() style rules for a tabs group.
+
+  Input: dict
+    "group"  - radio name (e.g. "tabs-1")
+    "toc"    - slice of dict {tab, headings(slice of {anchor,title})}
+              headings may be empty for blank tabs.
+
+  Output: HTML string containing:
+    - <nav class="book-tabs-toc" data-group="tabs-1"> with one
+      <ul data-tab="tabs-1-0">...</ul> per tab
+    - <style> with :has() rules so only the checked tab's list shows
+{{- */ -}}
+{{- $group := .group -}}
+{{- $toc := .toc -}}
+{{- $out := printf `<nav class="book-tabs-toc" data-group="%s">` $group -}}
+{{- range $i, $entry := $toc -}}
+  {{- $out = printf "%s<ul data-tab=\"%s\" data-index=\"%d\">" $out $entry.tab $i -}}
+  {{- range $entry.headings -}}
+    {{- $out = printf "%s<li><a href=\"#%s\">%s</a></li>" $out .anchor .title -}}
+  {{- end -}}
+  {{- $out = printf "%s</ul>" $out -}}
+{{- end -}}
+{{- $out = printf "%s</nav>" $out -}}
+{{- /* :has() rules: hide all lists by default, show the one whose radio is checked */ -}}
+{{- $style := `<style>nav.book-tabs-toc[data-group="%s"] ul{display:none;margin:0;padding:0;list-style:none;}main:has(input#%s-0:checked) nav.book-tabs-toc[data-group="%s"] ul[data-index="0"]{display:block;}` -}}
+{{- $style = printf $style $group $group $group -}}
+{{- range $i, $entry := $toc -}}
+  {{- if gt $i 0 -}}
+    {{- $style = printf `%s main:has(input#%s:checked) nav.book-tabs-toc[data-group="%s"] ul[data-index="%d"]{display:block;}` $style $entry.tab $group $i -}}
+  {{- end -}}
+{{- end -}}
+{{- $style = printf "%s</style>" $style -}}
+{{- return printf "%s%s" $out $style -}}
