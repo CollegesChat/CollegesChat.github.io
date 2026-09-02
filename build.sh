@@ -111,7 +111,9 @@ main() {
 
   # 6. Hugo 编译
   echo "Building the static website with Hugo..."
-
+  mkdir data
+  curl -L -o ./data/v1.yaml https://raw.githubusercontent.com/CollegesChat/questionnaire/refs/heads/main/v1.yaml
+  curl -L -o ./data/v2.yaml https://raw.githubusercontent.com/CollegesChat/questionnaire/refs/heads/main/v2.yaml
   # 检查 Cloudflare 环境变量 CF_BASE_URL 是否存在
   if [[ -n "${CF_PAGES_URL:-}" ]]; then
     echo "Found CF_PAGES_URL: ${CF_PAGES_URL}, overriding Hugo baseURL."
