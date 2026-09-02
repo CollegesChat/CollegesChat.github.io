@@ -1,0 +1,19 @@
+{{- $attributes := partial "docs/text/mapper" (dict
+  "attributes" (cond .IsNamedParams .Params dict)
+  "merge" (dict
+    "class" "book-tabs"
+  )
+) -}}
+<div {{ partial "docs/html-attrs" $attributes | safeHTMLAttr }}>
+{{- .Inner -}}
+{{- /* after children render, gather toc data and register on the page */ -}}
+{{- $group := printf "tabs-%d" (.Store.Get "id") -}}
+{{- $toc := or (.Store.Get "toc") (slice) -}}
+{{- if gt (len $toc) 0 -}}
+  {{- $rendered := partial "docs/text/tabs-toc" (dict "group" $group "toc" $toc) -}}
+  {{- $all := $.Page.Store.Get "book-tabs-toc" -}}
+  {{- if not $all }}{{ $all = slice }}{{ end -}}
+  {{- $.Page.Store.Set "book-tabs-toc" ($all | append $rendered) -}}
+{{- end -}}
+</div>
+{{- /* remove whitespaces */ -}}

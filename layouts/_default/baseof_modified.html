@@ -82,6 +82,7 @@
 {{ if partial "docs/toc-show" . }}
 <aside class="hidden">
   {{ template "toc" . }}
+  {{- with .Page.Store.Get "book-tabs-toc" }}{{ range . }}{{ . | safeHTML }}{{ end }}{{ end -}}
 </aside>
 {{ end }}
 {{ end }}
@@ -136,7 +137,7 @@
 {{ define "toc-container" }}
 {{ if partial "docs/toc-show" . }}
 <aside class="book-toc">
-  <div class="book-toc-content">{{ template "toc" . }}</div>
+  <div class="book-toc-content">{{ template "toc" . }}{{- with .Page.Store.Get "book-tabs-toc" }}{{ range . }}{{ . | safeHTML }}{{ end }}{{ end -}}</div>
 </aside>
 {{ end }}
 {{ end }}
