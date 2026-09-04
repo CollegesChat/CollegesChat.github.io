@@ -6,13 +6,19 @@ export function initParagraphFolder() {
     const heading = document.getElementById("自由补充");
     if (!heading) return;
 
-    // 收集该标题之后、直到下一个 H2 之前的所有 Axx: 开头的 p 标签
+    // 标题之后是单个 <ul>，里面的回答在 <li> 中
     const targetPs = [];
     let nextEl = heading.nextElementSibling;
-
     while (nextEl && nextEl.tagName !== "H2") {
-        if (nextEl.tagName === "P" && /^A\d+[:：]/.test(nextEl.textContent.trim())) {
-            targetPs.push(nextEl);
+        if (nextEl.tagName === "UL") {
+            nextEl.querySelectorAll(":scope > li").forEach((li) => {
+                // 跳过已被 <details> 折叠的重复回答分组，只处理直接回答的 p
+                if (li.querySelector("details")) return;
+                const p = li.querySelector(":scope > p");
+                if (p && /^A\d+[:：]/.test(p.textContent.trim())) {
+                    targetPs.push(p);
+                }
+            });
         }
         nextEl = nextEl.nextElementSibling;
     }
