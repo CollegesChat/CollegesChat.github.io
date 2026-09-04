@@ -21,6 +21,8 @@
       {{- $title = $q.title -}}
     {{- end -}}
   {{- end -}}
+  {{- /* headings without a YAML match (e.g. the generic ## 自由补充) use the caption */ -}}
+  {{- if not $title }}{{ $title = $caption }}{{ end -}}
   {{- if $anchor -}}
     {{- $headings = $headings | append (dict "anchor" $anchor "title" $title) -}}
   {{- end -}}
