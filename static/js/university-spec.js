@@ -27,7 +27,7 @@ onDomReady(() => {
     };
 
     //  为已有 HTML 中的 ID 添加交互式 span（后端已完成重复回答折叠）
-    document.querySelectorAll('h2[id^="q"] + ul').forEach((ul) => {
+    document.querySelectorAll('h2:is([id^="q"], [id^="自由补充"]) + ul').forEach((ul) => {
         for (const li of ul.querySelectorAll(":scope > li")) {
             const details = li.querySelector("details");
             if (details) {
@@ -57,10 +57,21 @@ onDomReady(() => {
                     }
                 }
             } else {
-                li.innerHTML = li.textContent.replace(
-                    /^\s*(A\d+)/,
-                    (_, id) => makeIdSpan(id, idTimeMap[id] || ""),
-                );
+                const directPs = li.querySelectorAll(":scope > p");
+                if (directPs.length) {
+                    // 保留 <p> 结构，只替换开头的 A 编号，供 fold-paragraphs 折叠
+                    directPs.forEach((p) => {
+                        p.innerHTML = p.textContent.replace(
+                            /^\s*(A\d+)/,
+                            (_, id) => makeIdSpan(id, idTimeMap[id] || ""),
+                        );
+                    });
+                } else {
+                    li.innerHTML = li.textContent.replace(
+                        /^\s*(A\d+)/,
+                        (_, id) => makeIdSpan(id, idTimeMap[id] || ""),
+                    );
+                }
             }
         }
     });
