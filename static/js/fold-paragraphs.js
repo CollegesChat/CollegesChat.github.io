@@ -1,6 +1,5 @@
 /**
  * 自动折叠 H2#自由补充 下面超过3行的 Axx: 开头的 p 标签
- * FIXME: 遇見li中多p（也就是含\n\n），會dom佈局偏移
  */
 export function initParagraphFolder() {
   // 找到所有以 "自由补充" 开头的标题（含 v1/v2 两个 tab 的 ## 自由补充-v1 / 自由补充-v2）
@@ -34,22 +33,28 @@ export function initParagraphFolder() {
     return btn;
   };
 
+  // 在添加 line-clamp 前测量自然高度。不能使用 scrollHeight，
+  // 因为 id-link 的绝对定位提示框会污染这个值。
+  const isLongerThanThreeLines = (el) => {
+    const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+    if (!Number.isFinite(lineHeight) || lineHeight <= 0) return false;
+    return el.getBoundingClientRect().height > lineHeight * 3 + 0.5;
+  };
+
   // 遍历回答分组并处理折叠
   groups.forEach((ps) => {
     // 1. 单段回答处理
     if (ps.length === 1) {
       const p = ps[0];
-      p.classList.add("foldable-p", "is-clamped");
+      p.classList.add("foldable-p");
 
-      // 超过 3 行才保留按钮，否则移除 is-clamped
-      if (p.scrollHeight > p.clientHeight) {
+      if (isLongerThanThreeLines(p)) {
+        p.classList.add("is-clamped");
         const btn = makeBtn(() => {
           const isClamped = p.classList.toggle("is-clamped");
           btn.textContent = isClamped ? "展开全文 ↓" : "收起全文 ↑";
         });
         p.after(btn);
-      } else {
-        p.classList.remove("is-clamped");
       }
       return;
     }
@@ -58,21 +63,19 @@ export function initParagraphFolder() {
     const li = ps[0].parentElement;
     if (!li) return;
 
-    // 创建包裹容器，默认先加上 is-clamped 截断
+    // 创建包裹容器，先保持自然高度用于判断
     const wrap = document.createElement("div");
-    wrap.className = "fold-wrap is-clamped";
+    wrap.className = "fold-wrap";
     ps.forEach((p) => wrap.appendChild(p));
     li.prepend(wrap);
 
-    // 利用原生渲染高度判断是否超长
-    if (wrap.scrollHeight > wrap.clientHeight) {
+    if (isLongerThanThreeLines(wrap)) {
+      wrap.classList.add("is-clamped");
       const btn = makeBtn(() => {
         const isClamped = wrap.classList.toggle("is-clamped");
         btn.textContent = isClamped ? "展开全文 ↓" : "收起全文 ↑";
       });
       li.append(btn);
-    } else {
-      wrap.classList.remove("is-clamped");
     }
   });
 }

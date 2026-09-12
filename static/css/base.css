@@ -5,22 +5,13 @@
     column-width: 180px;
 }
 
-.markdown ul,
-.markdown ol {
-    word-wrap: break-all;
-}
 
 .markdown li>details {
     padding: 0.5rem;
     margin: 0rem 0;
 }
 
-.markdown-inner hr {
-    margin-top: 4px;
-    margin-bottom: 4px;
-}
-
-.markdown-inner p {
+li p {
     margin: 0;
 }
 
