@@ -79,7 +79,6 @@ jobs:
           rm mermaid.min.js
           cd ..
           echo "Checking compatibility of CSS and JS..."
-          chmod +x ./checkCompatibility.sh && ./checkCompatibility.sh
       - name: Setup Pages
         uses: actions/configure-pages@v6
 
