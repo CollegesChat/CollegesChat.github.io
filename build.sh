@@ -59,10 +59,10 @@ main() {
     fi
 
     if [ ! -f "${CACHE_DIR}/local/hugo/hugo" ]; then
-      echo "Hugo Extended not found in cache. Installing Hugo Extended ${HUGO_VERSION}..."
-      curl -sLJO "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+      echo "Hugo not found in cache. Installing Hugo ${HUGO_VERSION}..."
+      curl -sLJO "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
       mkdir -p "${CACHE_DIR}/local/hugo"
-      tar -C "${CACHE_DIR}/local/hugo" -xf "hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+      tar -C "${CACHE_DIR}/local/hugo" -xf "hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
     fi
 
     popd > /dev/null

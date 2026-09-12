@@ -1,0 +1,15 @@
+{{- /*
+  Overrides the theme's version: routes the concatenated CSS through
+  Hugo's built-in dart-sass (toCSS) so native CSS nesting is flattened.
+
+  The theme relies on native CSS nesting since v0.15.0 (SASS dropped),
+  which chokes the tdewolff minifier and the doiuse compatibility check.
+  Flattening at build time keeps the shipped CSS valid and lets
+  checkCompatibility.sh (doiuse) parse it.
+*/ -}}
+{{- $styles := slice -}}
+{{- range resources.Get "styles/index.yaml" | transform.Unmarshal -}}
+  {{- $styles = $styles | append (resources.Get (printf "styles/%s" .)) -}}
+{{- end -}}
+{{- $styles := $styles | resources.Concat "book.css" | toCSS | resources.Minify | resources.Fingerprint -}}
+<link rel="stylesheet" href="{{ partial "docs/links/resource-precache" $styles }}" {{ template "integrity" $styles }}>
