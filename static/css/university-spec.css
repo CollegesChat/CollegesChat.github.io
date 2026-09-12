@@ -1,66 +1,62 @@
 .id-link {
   position: relative;
+  font-family: monospace;
   text-decoration: underline dotted #aaa;
   cursor: help;
-  font-family: monospace;
-  -webkit-user-select: none;
   user-select: none;
+  -webkit-user-select: none;
   -webkit-touch-callout: none;
-  /* 禁用系统自带的长按弹出菜单 */
 }
 
 .id-link::after {
   content: attr(data-title);
   position: absolute;
-  bottom: 130%;
+  top: calc(100% + 8px);
   left: 50%;
+  z-index: 999;
   transform: translateX(-50%);
-  background-color: rgba(50, 50, 50, 0.95);
-  color: #fff;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+  width: max-content;
+  max-width: min(360px, 85vw);
+  max-height: 50vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+
   padding: 6px 12px;
   border-radius: 4px;
-  font-size: 12px;
-  font-family: sans-serif;
-  white-space: nowrap;
-  z-index: 999;
+  background: var(--body-background);
+  color: var(--body-font-color);
+  font: 12px/1.5 sans-serif;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+
   opacity: 0;
   pointer-events: none;
-  transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
-/* 电脑端：鼠标悬停显示 */
 @media (hover: hover) {
   .id-link:hover::after {
     opacity: 1;
-    transform: translateX(-50%) translateY(-2px);
   }
 }
 
-/* 手机端：将 Tooltip 转换为底部固定弹窗（Toast），彻底防溢出 */
 @media (hover: none) {
   .id-link::after {
     position: fixed;
-    /* 脱离文本流，改为相对于屏幕视口定位 */
+    top: auto;
     bottom: 24px;
-    /* 距离屏幕底部距离 */
     left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    /* 默认向下偏移 10px，用于入场动画 */
-    white-space: normal;
-    /* 允许长文本在小屏上安全换行 */
-    width: max-content;
+    transform: translate(-50%, 10px);
     max-width: 85vw;
-    /* 限制最大宽度为屏幕宽度的 85%，两边留白 */
-    text-align: center;
   }
 
-  /* 激活显示状态 */
   .id-link.show-tip::after {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
-    /* 向上滑入原位 */
+    transform: translate(-50%, 0);
   }
 }
