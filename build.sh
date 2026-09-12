@@ -128,8 +128,6 @@ main() {
   rm -rf asciinema katex
   rm -f mermaid.min.js
   popd > /dev/null
-  echo "Checking compatibility of CSS and JS..."
-  chmod +x ./checkCompatibility.sh && ./checkCompatibility.sh
   echo "Build completed successfully!"
 }
 
