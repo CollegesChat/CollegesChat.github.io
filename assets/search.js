@@ -86,7 +86,7 @@
       const anchor = li.querySelector('a'),
         title = li.querySelector('a > span');
 
-      anchor.href = `${page.href}#:~:text=${page.terms[0]}`;
+      anchor.href = page.href;
       title.append(...highlight(page.title, match(page, 'title'), 0, page.title.length, input.value));
 
       results.appendChild(li);
