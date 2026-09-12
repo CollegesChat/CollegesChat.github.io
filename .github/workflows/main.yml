@@ -78,7 +78,6 @@ jobs:
           rm -rf asciinema katex
           rm mermaid.min.js
           cd ..
-          echo "Checking compatibility of CSS and JS..."
       - name: Setup Pages
         uses: actions/configure-pages@v6
 
