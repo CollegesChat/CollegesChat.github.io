@@ -1,26 +1,36 @@
-/* 针对需要折叠的段落的基础样式 */
-.foldable-p {
-  position: relative;
-  transition: max-height 0.3s ease;
-  margin-bottom: 8px !important;
-}
-
-/* 限制 3 行的核心 CSS */
-.foldable-p.is-clamped {
+/* 限制 3 行的核心 CSS（单段 p 与多段容器 fold-wrap 通用） */
+.is-clamped {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
-  /* 限制 3 行 */
   overflow: hidden;
 }
 
-/* 展开/收起 按钮的样式 */
+/* 单段 p 的基础样式 */
+.foldable-p {
+  position: relative;
+  margin-bottom: 8px !important;
+}
+
+/* 多段折叠容器：折叠时将内部 p 变为 inline，让浏览器将其视为单文本块，原生触发 ... 省略号 */
+.fold-wrap.is-clamped p {
+  display: inline;
+  margin: 0 !important;
+}
+
+/* 多段折叠时，段落之间自动补充空格隔开 */
+.fold-wrap.is-clamped p+p::before {
+  content: " ";
+}
+
+/* 展开/收起 按钮样式 */
 .fold-toggle-btn {
   display: inline-block;
   color: #007bff;
   cursor: pointer;
   font-size: 13px;
   font-weight: bold;
+  margin-top: 4px;
   margin-bottom: 15px;
   user-select: none;
   -webkit-user-select: none;
