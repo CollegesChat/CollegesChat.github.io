@@ -6,16 +6,17 @@
   overflow: hidden;
 }
 
-/* 单段 p 的基础样式 */
+/* 单段 p 的基础样式：垂直外边距统一收紧，避免与 .markdown p 的 16px 上边距折叠成过大行距 */
 .foldable-p {
   position: relative;
-  margin-bottom: 8px !important;
+  margin-top: 0;
+  margin-bottom: 4px;
 }
 
 /* 多段折叠容器：折叠时将内部 p 变为 inline，让浏览器将其视为单文本块，原生触发 ... 省略号 */
 .fold-wrap.is-clamped p {
   display: inline;
-  margin: 0 !important;
+  margin: 0;
 }
 
 /* 多段折叠时，段落之间自动补充空格隔开 */
@@ -30,8 +31,8 @@
   cursor: pointer;
   font-size: 13px;
   font-weight: bold;
-  margin-top: 4px;
-  margin-bottom: 15px;
+  margin-top: 0;
+  margin-bottom: 4px;
   user-select: none;
   -webkit-user-select: none;
 }
