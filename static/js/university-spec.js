@@ -100,7 +100,13 @@ onDomReady(() => {
               );
             });
           } else {
-            li.innerHTML = li.textContent.replace(/^\s*(A\d+)/, (_, id) =>
+            if (!/^\s*A\d+[:：]/.test(li.textContent)) continue;
+            // 某些页面会把单段回答直接输出为 li 文本。不要用
+            // li.innerHTML = li.textContent 重建节点，以免破坏已有结构。
+            const p = document.createElement("p");
+            while (li.firstChild) p.appendChild(li.firstChild);
+            li.appendChild(p);
+            p.innerHTML = p.textContent.replace(/^\s*(A\d+)/, (_, id) =>
               makeIdSpan(id, infoMap[id]),
             );
           }

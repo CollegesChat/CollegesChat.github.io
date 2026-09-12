@@ -1,5 +1,6 @@
 /* 限制 3 行的核心 CSS（单段 p 与多段容器 fold-wrap 通用） */
-.is-clamped {
+.is-clamped,
+.foldable-p.is-clamped {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
