@@ -34,55 +34,45 @@ export function initParagraphFolder() {
     return btn;
   };
 
-  // 遍历这些 p 组，判断并执行折叠
+  // 遍历回答分组并处理折叠
   groups.forEach((ps) => {
-    // 先加上基础样式类
-    ps.forEach((p) => p.classList.add("foldable-p"));
-
-    // 单段回答：沿用按 <p> 自身的 -webkit-line-clamp 截断
+    // 1. 单段回答处理
     if (ps.length === 1) {
       const p = ps[0];
-      const fullHeight = p.scrollHeight; // 未折叠时的真实高度
-      p.classList.add("is-clamped");
-      const clampedHeight = p.clientHeight; // 限制3行后的高度
-      if (fullHeight > clampedHeight) {
-        // 创建“展开全文”按钮，插在该 p 标签的后面
+      p.classList.add("foldable-p", "is-clamped");
+
+      // 超过 3 行才保留按钮，否则移除 is-clamped
+      if (p.scrollHeight > p.clientHeight) {
         const btn = makeBtn(() => {
-          const isClamped = p.classList.contains("is-clamped");
-          isClamped
-            ? p.classList.remove("is-clamped")
-            : p.classList.add("is-clamped");
-          btn.textContent = isClamped ? "收起全文 ↑" : "展开全文 ↓";
+          const isClamped = p.classList.toggle("is-clamped");
+          btn.textContent = isClamped ? "展开全文 ↓" : "收起全文 ↑";
         });
         p.after(btn);
       } else {
-        // 如果没超过3行，移除 line-clamp 限制，保持原样展示
         p.classList.remove("is-clamped");
       }
       return;
     }
 
-    // 多段回答：单段都 ≤3 行时按 <p> 截断不会触发，改为把 <p> 包进容器，按 3 行 max-height 整体截断。
-    // 注意：不能在 <li> 上应用 overflow:hidden，否则会吃掉列表的 ::marker 圆点。
+    // 2. 多段回答处理
     const li = ps[0].parentElement;
     if (!li) return;
-    const lineH = parseFloat(getComputedStyle(ps[0]).lineHeight) || 25.6; // 3 行的高度
-    const cap = lineH * 3;
-    const fullHeight = ps.reduce((sum, p) => sum + (p.scrollHeight || 0), 0);
-    if (fullHeight <= cap) return;
 
+    // 创建包裹容器，默认先加上 is-clamped 截断
     const wrap = document.createElement("div");
-    wrap.className = "fold-wrap";
-    wrap.style.cssText = `max-height:${cap}px;overflow:hidden;`;
+    wrap.className = "fold-wrap is-clamped";
     ps.forEach((p) => wrap.appendChild(p));
     li.prepend(wrap);
 
-    const btn = makeBtn(() => {
-      const clamped = wrap.style.maxHeight !== "";
-      wrap.style.maxHeight = clamped ? "" : cap + "px";
-      wrap.style.overflow = clamped ? "" : "hidden";
-      btn.textContent = clamped ? "收起全文 ↑" : "展开全文 ↓";
-    });
-    li.append(btn);
+    // 利用原生渲染高度判断是否超长
+    if (wrap.scrollHeight > wrap.clientHeight) {
+      const btn = makeBtn(() => {
+        const isClamped = wrap.classList.toggle("is-clamped");
+        btn.textContent = isClamped ? "展开全文 ↓" : "收起全文 ↑";
+      });
+      li.append(btn);
+    } else {
+      wrap.classList.remove("is-clamped");
+    }
   });
 }
