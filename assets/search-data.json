@@ -3,11 +3,17 @@
 {{- $pages = where $pages "Params.bookSearchExclude" "!=" true -}}
 {{- $pages = where $pages "Content" "!=" "" -}}
 
-{{ range $index, $page := $pages }}
-{{ if gt $index 0}},{{end}} {
-    "href": "{{ $page.RelPermalink }}",
-    "title": {{ (partial "docs/title" $page) | jsonify }},
-    "section": {{ (partial "docs/title" $page.Parent) | default $.Site.Title | jsonify }},
+{{- $seen := dict -}}
+{{- $first := true -}}
+{{- range $pages -}}
+{{- $href := .RelPermalink -}}
+{{- if not (index $seen $href) -}}
+{{- if not $first}},{{end}}{
+  "href": {{ $href | jsonify }},
+  "title": {{ (partial "docs/title" .) | jsonify }}
 }
+{{- $seen = merge $seen (dict $href true) -}}
+{{- $first = false -}}
+{{- end -}}
 {{- end -}}
 ]

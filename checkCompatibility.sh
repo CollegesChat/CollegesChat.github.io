@@ -5,13 +5,13 @@ set -eo pipefail
 # CSS 檢查
 find public -type f -name '*.css' -print0 | \
 xargs -0 npx doiuse \
---browsers "Chrome >= 109, Firefox >= 115, iOS >= 15" \
+--browsers "Chrome >= 112, Firefox >= 117, iOS >= 16.5" \
 --quiet > /dev/null
 
 # JS 檢查
 find public -type f \( -name '*.js' -o -name '*.mjs' -o -name '*.cjs' \) \
 -exec npx esbuild {} \
---target=chrome109,firefox115,safari15 \
+--target=chrome112,firefox117,safari16.5 \
 --format=esm \
 --bundle=false \
 --log-level=error \

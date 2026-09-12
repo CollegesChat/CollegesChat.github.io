@@ -7,11 +7,11 @@
     // 1. 檢測是否為舊瀏覽器
     var isOld = (function () {
       var chrome = ua.match(/Chrome\/(\d+)/);
-      if (chrome && parseInt(chrome[1]) < 109) return true;
+      if (chrome && parseInt(chrome[1]) < 112) return true;
       var ff = ua.match(/Firefox\/(\d+)/);
-      if (ff && parseInt(ff[1]) < 115) return true;
+      if (ff && parseInt(ff[1]) < 117) return true;
       var safari = ua.match(/Version\/(\d+)\.\d+ Safari/);
-      if (safari && parseInt(safari[1]) < 15) return true;
+      if (safari && parseFloat(safari[1]) < 16.5) return true;
       return false;
     })();
 
