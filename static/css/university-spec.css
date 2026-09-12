@@ -43,6 +43,22 @@
   .id-link:hover::after {
     opacity: 1;
   }
+
+  /* 折叠回答的 p 必须 overflow:hidden 才能实现三行截断。
+     用 CSS Anchor Positioning 把提示框移出折叠容器的裁剪区域。 */
+  @supports (anchor-name: --id-tip) and (top: anchor(bottom)) {
+    .is-clamped .id-link:hover {
+      anchor-name: --id-tip-anchor;
+    }
+
+    .is-clamped .id-link:hover::after {
+      position: fixed;
+      position-anchor: --id-tip-anchor;
+      top: calc(anchor(bottom) + 8px);
+      left: anchor(center);
+      transform: translateX(-50%);
+    }
+  }
 }
 
 @media (hover: none) {
