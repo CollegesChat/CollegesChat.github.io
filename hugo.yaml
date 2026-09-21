@@ -7,6 +7,9 @@ description: 收集全世界各高校招生时不会写明但实实在在影响�
 copyright: "$copyright"
 disableKinds: ["taxonomy", "term", "rss"]
 
+outputs:
+  section: ["HTML", "JSON"]
+
 # Book configuration
 disablePathToLower: true
 enableGitInfo: true
