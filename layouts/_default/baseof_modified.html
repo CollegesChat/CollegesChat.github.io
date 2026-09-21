@@ -109,6 +109,20 @@
 {{ define "main" }}
 <article class="markdown book-article">
   <!--<h1 id="university-name">{{ .Title }}</h1> -->
+  {{- $isProvince := false -}}
+  {{- with .File -}}
+  {{- if and $.IsSection (or (strings.HasPrefix .Path "docs/universities/") (strings.HasPrefix .Path "docs/archived/universities/")) -}}
+  {{- $isProvince = true -}}
+  {{- end -}}
+  {{- end -}}
+  {{- if and $isProvince (gt (len .RegularPages) 0) -}}
+  <h1>{{ .Title }}</h1>
+  <ul class="province-list">
+    {{ range sort .RegularPages "Title" }}
+    <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    {{ end }}
+  </ul>
+  {{- else -}}
   {{- .Content -}}
   {{- $currentLink := .RelPermalink -}}
   {{- $relPath := .File.Path -}} {{- $isArchived := hasPrefix $relPath "docs/archived/" -}}
@@ -132,6 +146,7 @@
   <div class="book-hint warning">
     📦 本页面存在历史存档：<a href="{{ $archiveLink }}">查看历史版本</a>
   </div>
+  {{- end -}}
   {{- end -}}
   {{- end -}}
 </article>
