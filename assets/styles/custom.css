@@ -68,6 +68,34 @@
   font-size: 0.85rem;
 }
 
+.province-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  columns: 3;
+  column-gap: 2rem;
+}
+
+.province-list a {
+  display: block;
+  padding: 0.2rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media screen and (max-width: 900px) {
+  .province-list {
+    columns: 2;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .province-list {
+    columns: 1;
+  }
+}
+
 .book-header {
   display: contents;
 }
