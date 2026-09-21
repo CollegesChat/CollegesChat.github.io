@@ -1,0 +1,10 @@
+{{- $pages := sort .RegularPages "Title" -}}
+{{- $base := "" -}}
+{{- range first 1 $pages -}}
+{{- $base = printf "%s/" (path.Dir (strings.TrimSuffix "/" .RelPermalink)) -}}
+{{- end -}}
+{{- $entries := slice -}}
+{{- range $pages -}}
+{{- $entries = $entries | append (printf "%s\t%s" .Title (path.Base (strings.TrimSuffix "/" .RelPermalink))) -}}
+{{- end -}}
+{{- dict "base" $base "entries" $entries | jsonify -}}

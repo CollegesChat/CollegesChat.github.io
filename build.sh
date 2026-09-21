@@ -103,6 +103,10 @@ main() {
   uv run python main.py
   popd > /dev/null
 
+  # 4.5 每省一个独立网址，用来放同省学校列表的 index.json（原因见脚本 docstring）
+  echo "Assigning per-province URLs..."
+  python3 scripts/assign_province_urls.py
+
   # 5. 注入时间戳
   echo "Injecting current build time into hugo.yaml..."
   BUILD_TIME=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')
