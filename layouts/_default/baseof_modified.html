@@ -5,10 +5,16 @@
   <head>
     {{ partial "docs/html-head" . }}
     {{ partial "docs/inject/head" . }}
-    <script type="module" src="{{ "js/university-spec.js" | relURL }}"></script>
-    <link rel="stylesheet" href="{{ "css/university-spec.css" | relURL }}">
-    <link rel="stylesheet" href="{{ "css/fold-paragraphs.css" | relURL }}">
-    <link rel="stylesheet" href="{{ "css/base.css" | relURL }}">
+    {{/* 源文件在 assets/js/、assets/css/：static/ 下的文件不走 Hugo Pipes，--minify 也不会压缩它们 */}}
+    {{- $js := resources.Get "js/university-spec.js"
+      | js.Build (dict "format" "esm" "minify" true)
+      | resources.Fingerprint -}}
+    <script type="module" src="{{ $js.RelPermalink }}"></script>
+    {{- range slice "css/university-spec.css" "css/fold-paragraphs.css" "css/base.css" -}}
+    {{- with resources.Get . | resources.Minify | resources.Fingerprint -}}
+    <link rel="stylesheet" href="{{ .RelPermalink }}">
+    {{- end -}}
+    {{- end -}}
   </head>
   <body dir="{{ default "ltr" .Site.Language.Direction }}"
         class="book-kind-{{ .Kind }} book-type-{{ .Type }}{{ with .Layout }} book-layout-{{ . }}{{ end }}">
