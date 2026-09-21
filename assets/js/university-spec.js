@@ -1,4 +1,63 @@
 import { initParagraphFolder } from "./fold-paragraphs.js";
+// 同省列表从每省 JSON 运行时载入；无 JS 时由 <noscript> 里的「查看全部」链接兜底
+function initSameProvinceMenu() {
+  const nav = document.querySelector(".same-province-menu[data-province-index]");
+  if (!nav) return;
+
+  const url = nav.dataset.provinceIndex;
+  const list = nav.querySelector("ul");
+  if (!url || !list) return;
+
+  fetch(url)
+    .then((res) => {
+      if (!res.ok) throw new Error(String(res.status));
+      return res.json();
+    })
+    .then((data) => {
+      const base = data.base || "";
+      const entries = data.entries || [];
+      const frag = document.createDocumentFragment();
+      let active = null;
+
+      entries.forEach((entry) => {
+        const sep = entry.indexOf("\t");
+        if (sep === -1) return;
+        const a = document.createElement("a");
+        a.textContent = entry.slice(0, sep);
+        a.href = base + entry.slice(sep + 1) + "/";
+        const li = document.createElement("li");
+        li.appendChild(a);
+        if (a.pathname === window.location.pathname) {
+          li.classList.add("active");
+          active = li;
+        }
+        frag.appendChild(li);
+      });
+
+      list.appendChild(frag);
+
+      if (active) {
+        scrollActiveIntoView(nav, active);
+      }
+    })
+    .catch(() => {
+      const li = document.createElement("li");
+      li.className = "load-failed";
+      const a = document.createElement("a");
+      a.href = url.replace(/index\.json$/, "");
+      a.textContent = "列表载入失败，前往省列表";
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+}
+
+// 省列表是自己的滚动框，把当前学校滚到可视区中间
+function scrollActiveIntoView(nav, active) {
+  const item = active.getBoundingClientRect();
+  const view = nav.getBoundingClientRect();
+  nav.scrollTop += item.top - view.top - (nav.clientHeight - item.height) / 2;
+}
+
 function onDomReady(callback) {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", callback, { once: true });
@@ -217,4 +276,5 @@ onDomReady(() => {
     }
   });
   initParagraphFolder();
+  initSameProvinceMenu();
 });
