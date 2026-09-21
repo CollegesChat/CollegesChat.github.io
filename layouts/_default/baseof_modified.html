@@ -66,18 +66,14 @@
 {{ if gt (len $dirParts) $provinceIndex }}
 {{ $province := index $dirParts $provinceIndex }}
 {{ $sameProvincePages := $.Parent.RegularPages }}
-<nav class="same-province-menu" aria-label="同省学校列表">
+<nav class="same-province-menu"
+     aria-label="同省学校列表"
+     data-province-index="{{ $.Parent.RelPermalink }}index.json">
   <div class="same-province-title">{{ $province }}高校{{ if $isArchivedUniversity }}（归档）{{ end }}</div>
-  <ul>
-    {{ $currentPage := $ }}
-    {{ range sort $sameProvincePages "Title" }}
-    <li {{ if eq .RelPermalink $currentPage.RelPermalink }}
-        class="active"
-        {{ end }}>
-      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-    </li>
-    {{ end }}
-  </ul>
+  <ul></ul>
+  <noscript>
+    <a class="all" href="{{ $.Parent.RelPermalink }}">查看全部 {{ len $sameProvincePages }} 所 →</a>
+  </noscript>
 </nav>
 {{ end }}
 {{ end }}

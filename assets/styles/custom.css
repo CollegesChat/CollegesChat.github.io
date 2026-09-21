@@ -53,6 +53,21 @@
   color: var(--color-link);
   font-weight: 700;
 }
+
+.same-province-menu li.load-failed {
+  padding: 0.2rem 0;
+  color: var(--gray-500);
+  font-size: 0.85rem;
+}
+
+.same-province-menu a.all {
+  display: block;
+  margin-top: 0.4rem;
+  padding: 0.2rem 0;
+  color: var(--gray-500);
+  font-size: 0.85rem;
+}
+
 .book-header {
   display: contents;
 }
