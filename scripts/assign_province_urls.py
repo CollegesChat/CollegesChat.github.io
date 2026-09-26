@@ -11,50 +11,39 @@ content/docs/universities/_index.md 的 cascade `url: /universities/:slug/` 会�
     python3 scripts/assign_province_urls.py [站点根目录]
 """
 
-import pathlib
 import re
 import sys
+from pathlib import Path
 
 TARGETS = (
-    ("content/docs/universities", "/universities"),
-    ("content/docs/archived/universities", "/archived/universities"),
+    ('content/docs/universities', '/universities'),
+    ('content/docs/archived/universities', '/archived/universities'),
 )
 
-
-def split_front_matter(text):
-    if not text.startswith("---"):
-        return "", text
-    end = text.find("\n---", 3)
-    return ("", text) if end == -1 else (text[3 : end + 1], text[end + 4 :])
+FRONT_MATTER = re.compile(r'\A---\n(.*?)\n---', re.S)
+OWNED = re.compile(r'(?m)^[ \t]*(?:url|title):.*\n')
 
 
-def build_front_matter(url, title, front_matter):
-    # 压掉首尾空行，保证重复执行不会越跑越多空行
-    kept = re.sub(r"(?m)^[ \t]*(url|title):.*\n", "", front_matter).strip("\n")
-    return f"url: {url}\ntitle: {title}\n{kept}\n" if kept else f"url: {url}\ntitle: {title}\n"
+def assign(index, url, title):
+    text = index.read_text(encoding='utf-8') if index.exists() else ''
+    m = FRONT_MATTER.match(text)
+    fm, rest = (m[1], text[m.end():]) if m else ('', text)
+    # 重写 url/title 而不是追加，保证重复执行不会越跑越长
+    kept = OWNED.sub('', fm).strip('\n')
+    head = f'url: {url}\ntitle: {title}\n' + (kept + '\n' if kept else '')
+    # rest 自带换行，'---' 后有无尾随换行取决于上游生成器
+    index.write_text(f'---\n{head}---{rest}', encoding='utf-8')
 
 
-def assign(root):
-    total = 0
-    for rel, prefix in TARGETS:
-        base = root / rel
-        if not base.is_dir():
-            continue
-        for province in sorted(p for p in base.iterdir() if p.is_dir()):
-            index = province / "_index.md"
-            text = index.read_text(encoding="utf-8") if index.exists() else ""
-            front_matter, rest = split_front_matter(text)
-            fm = build_front_matter(f"{prefix}/{province.name}/", province.name, front_matter)
-            index.write_text(f"---\n{fm}---{rest}", encoding="utf-8")
-            total += 1
-    return total
+root = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent
 
+total = 0
+for rel, prefix in TARGETS:
+    base = root / rel
+    if not base.is_dir():
+        continue
+    for province in sorted(p for p in base.iterdir() if p.is_dir()):
+        assign(province / '_index.md', f'{prefix}/{province.name}/', province.name)
+        total += 1
 
-def main():
-    here = pathlib.Path(__file__).resolve().parent
-    root = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else here.parent
-    print(f"Assigned urls for {assign(root)} province sections under {root}")
-
-
-if __name__ == "__main__":
-    main()
+print(f'Assigned urls for {total} province sections under {root}')
