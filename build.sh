@@ -91,17 +91,7 @@ main() {
 
   # 4. 运行 Python 脚本生成 Markdown (此时 uv 会自动命中并在 .cache/uv 下读写缓存)
   echo "Building Markdown files with uv..."
-  export SITE_DIR="$(pwd)"
-  export LOGURU_LEVEL="WARNING"
-  export LOGURU_COLORIZE=False
-  pushd generator > /dev/null
-  wget https://github.com/CollegesChat/china-university-list/releases/latest/download/output.csv
-  wget https://github.com/CollegesChat/university-information/raw/refs/heads/v2/docs/README.md
-  cat README.md >> ../content/_index.md
-  cat output.csv >> ./required/colleges.csv
-  uv sync
-  uv run python main.py
-  popd > /dev/null
+  scripts/build_markdown.sh
 
   # 4.5 每省一个独立网址，用来放同省学校列表的 index.json（原因见脚本 docstring）
   echo "Assigning per-province URLs..."
@@ -109,30 +99,12 @@ main() {
 
   # 5. 注入时间戳
   echo "Injecting current build time into hugo.yaml..."
-  BUILD_TIME=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')
-  DATA_TITLE=$(scripts/csv_last_commits.sh)
-  COPYRIGHT_STR="<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank' rel='noopener'>CC BY-NC-SA 4.0</a> | <span title='${DATA_TITLE}'>Generated on ${BUILD_TIME} (UTC+8)</span>"
-  sed -i "s#copyright: \"\$copyright\"#copyright: \"${COPYRIGHT_STR}\"#g" hugo.yaml
+  scripts/inject_copyright.sh
 
-  # 6. Hugo 编译
+  # 6. Hugo 编译 + 7. 清理静态文件（与 GitHub Pages workflow 共用）
   echo "Building the static website with Hugo..."
-  mkdir data
-  curl -L -o ./data/v1.yaml https://raw.githubusercontent.com/CollegesChat/questionnaire/refs/heads/main/v1.yaml
-  curl -L -o ./data/v2.yaml https://raw.githubusercontent.com/CollegesChat/questionnaire/refs/heads/main/v2.yaml
-  # 检查 Cloudflare 环境变量 CF_BASE_URL 是否存在
-  if [[ -n "${CF_PAGES_URL:-}" ]]; then
-    echo "Found CF_PAGES_URL: ${CF_PAGES_URL}, overriding Hugo baseURL."
-    hugo build --gc --minify -d public -b "${CF_PAGES_URL}"
-  else
-    echo "CF_PAGES_URL not set, using default baseURL from config file."
-    hugo build --gc --minify -d public
-  fi
-  # 7. 清理静态文件
-  echo "Cleaning up output folder..."
-  pushd public > /dev/null
-  rm -rf asciinema katex
-  rm -f mermaid.min.js
-  popd > /dev/null
+  scripts/build_hugo.sh
+
   echo "Build completed successfully!"
 }
 

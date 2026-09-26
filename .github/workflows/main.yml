@@ -47,42 +47,14 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "generator/uv.lock"
       - name: Build Markdown
-        env:
-          SITE_DIR: ${{ github.workspace }}
-        run: |
-          export LOGURU_LEVEL="WARNING"
-          export LOGURU_COLORIZE=False
-          cd generator
-          wget https://github.com/CollegesChat/china-university-list/releases/latest/download/output.csv
-          wget https://github.com/CollegesChat/university-information/raw/refs/heads/v2/docs/README.md
-          cat output.csv >> ./required/colleges.csv
-          cat README.md >> ../content/_index.md
-          uv sync
-          uv run python main.py
-          cd ..
+        run: scripts/build_markdown.sh
       - name: Assign per-province URLs
         # 各省要有独立网址，index.json 才有落点；否则 36 个省全压到 /universities/ 互相覆盖
         run: python3 scripts/assign_province_urls.py
-      - name: Get Current Time
-        # 先用单独的一步把东八区时间算出来，并写入 GitHub 全局变量中
-        # DATA_TITLE 是页脚 title 提示：v1/v2 答卷 CSV 各自的最后一次提交时间
-        run: |
-          echo "BUILD_TIME=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
-          echo "DATA_TITLE=$(scripts/csv_last_commits.sh)" >> $GITHUB_ENV
-
-      - name: Replace Copyright in hugo.yaml
-        run: |
-          sed -i "s#copyright: \"\$copyright\"#copyright: \"<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank' rel='noopener'>CC BY-NC-SA 4.0</a> | <span title='${{ env.DATA_TITLE }}'>Generated on ${{ env.BUILD_TIME }} (UTC+8)\"#g" hugo.yaml
+      - name: Inject Build Time and Copyright
+        run: scripts/inject_copyright.sh
       - name: Build Static Website
-        run: |
-          mkdir data
-          curl -L -o ./data/v1.yaml https://raw.githubusercontent.com/CollegesChat/questionnaire/refs/heads/main/v1.yaml
-          curl -L -o ./data/v2.yaml https://raw.githubusercontent.com/CollegesChat/questionnaire/refs/heads/main/v2.yaml
-          hugo build --minify
-          cd public
-          rm -rf asciinema katex
-          rm mermaid.min.js
-          cd ..
+        run: scripts/build_hugo.sh
       - name: Setup Pages
         uses: actions/configure-pages@v6
 
