@@ -44,7 +44,7 @@ params:
   BookKaTeX: false
   BookZoom: false
   BookRepo: https://github.com/CollegesChat/CollegesChat.github.io
-  BookEditLink: "https://github.com/CollegesChat/university-information/edit/master/questionnaires/site/docs/choose-a-college/{{ path.Base .Path }}"
+  BookEditLink: "https://github.com/CollegesChat/university-information/edit/v2/docs/choose-a-college/{{ path.Base .Path }}"
   BookFavicon: img/favicon.webp
 
   # Path to logo image file relative to 'static' directory
