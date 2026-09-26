@@ -41,3 +41,10 @@
 .fold-toggle-btn:hover {
   text-decoration: underline;
 }
+
+/* #007bff 在深色底上只有 3.1:1 */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme$="auto"] .fold-toggle-btn {
+    color: #81a1c1;
+  }
+}

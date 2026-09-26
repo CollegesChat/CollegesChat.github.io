@@ -1,8 +1,16 @@
 mark {
-    color: inherit;
+    color: #2b2200;
     background-color: #fff3a3;
     border-radius: 2px;
     padding: 0 0.15em;
+}
+
+/* inherit 在深色下拿到的是浅色字（约 1:1），故显式配色；不用 light-dark()（需 Chrome 123+） */
+@media (prefers-color-scheme: dark) {
+    :root[data-theme$="auto"] mark {
+        color: #ffe9a3;
+        background-color: #6b5410;
+    }
 }
 
 .markdown-inner>ul:first-child {
