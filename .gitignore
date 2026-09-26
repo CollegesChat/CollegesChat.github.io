@@ -5,3 +5,5 @@ content/docs/*
 .playwright-mcp
 data/v1.yaml
 data/v2.yaml
+TODO.md
+.workbuddy/
