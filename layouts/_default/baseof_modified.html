@@ -10,7 +10,7 @@
       | js.Build (dict "format" "esm" "minify" true)
       | resources.Fingerprint -}}
     <script type="module" src="{{ $js.RelPermalink }}"></script>
-    {{- range slice "css/university-spec.css" "css/fold-paragraphs.css" "css/base.css" -}}
+    {{- range slice "css/university-spec.css" "css/fold-paragraphs.css" -}}
     {{- with resources.Get . | resources.Minify | resources.Fingerprint -}}
     <link rel="stylesheet" href="{{ .RelPermalink }}">
     {{- end -}}
