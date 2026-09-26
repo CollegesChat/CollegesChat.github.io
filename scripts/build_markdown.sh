@@ -7,8 +7,9 @@ export LOGURU_LEVEL="${LOGURU_LEVEL:-WARNING}"
 export LOGURU_COLORIZE=False
 
 pushd generator > /dev/null
+# -O: wget 默认另存为 *.1 而非覆盖
 wget https://github.com/CollegesChat/china-university-list/releases/latest/download/output.csv
-wget https://github.com/CollegesChat/university-information/raw/refs/heads/v2/docs/README.md
+wget -O README.md https://github.com/CollegesChat/university-information/raw/refs/heads/v2/docs/README.md
 cat output.csv >> ./required/colleges.csv
 cat README.md >> ../content/_index.md
 uv sync
