@@ -1,0 +1,6 @@
+{{- $link := .Page.Params.editLink | default .Site.Params.BookEditLink -}}
+{{- return (partial "docs/text/template" (dict "Template" $link "Context" (dict
+  "Site" .Site
+  "Page" .Page
+  "Path" (strings.TrimPrefix hugo.WorkingDir .Page.File.Filename)
+)) | urls.JoinPath) -}}
