@@ -60,6 +60,9 @@ jobs:
           uv sync
           uv run python main.py
           cd ..
+      - name: Assign per-province URLs
+        # 各省要有独立网址，index.json 才有落点；否则 36 个省全压到 /universities/ 互相覆盖
+        run: python3 scripts/assign_province_urls.py
       - name: Get Current Time
         # 先用单独的一步把东八区时间算出来，并写入 GitHub 全局变量中
         run: |
