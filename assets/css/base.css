@@ -1,3 +1,10 @@
+mark {
+    color: inherit;
+    background-color: #fff3a3;
+    border-radius: 2px;
+    padding: 0 0.15em;
+}
+
 .markdown-inner>ul:first-child {
     column-count: auto;
     column-gap: 10px;
