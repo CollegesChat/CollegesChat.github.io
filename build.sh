@@ -110,7 +110,8 @@ main() {
   # 5. 注入时间戳
   echo "Injecting current build time into hugo.yaml..."
   BUILD_TIME=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')
-  COPYRIGHT_STR="<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank' rel='noopener'>CC BY-NC-SA 4.0</a> | Generated on ${BUILD_TIME} (UTC+8)"
+  DATA_TITLE=$(scripts/csv_last_commits.sh)
+  COPYRIGHT_STR="<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank' rel='noopener'>CC BY-NC-SA 4.0</a> | <span title='${DATA_TITLE}'>Generated on ${BUILD_TIME} (UTC+8)</span>"
   sed -i "s#copyright: \"\$copyright\"#copyright: \"${COPYRIGHT_STR}\"#g" hugo.yaml
 
   # 6. Hugo 编译

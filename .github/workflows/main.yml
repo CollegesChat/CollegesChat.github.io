@@ -65,12 +65,14 @@ jobs:
         run: python3 scripts/assign_province_urls.py
       - name: Get Current Time
         # 先用单独的一步把东八区时间算出来，并写入 GitHub 全局变量中
+        # DATA_TITLE 是页脚 title 提示：v1/v2 答卷 CSV 各自的最后一次提交时间
         run: |
           echo "BUILD_TIME=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+          echo "DATA_TITLE=$(scripts/csv_last_commits.sh)" >> $GITHUB_ENV
 
       - name: Replace Copyright in hugo.yaml
         run: |
-          sed -i "s#copyright: \"\$copyright\"#copyright: \"<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank' rel='noopener'>CC BY-NC-SA 4.0</a> | Generated on ${{ env.BUILD_TIME }} (UTC+8)\"#g" hugo.yaml
+          sed -i "s#copyright: \"\$copyright\"#copyright: \"<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank' rel='noopener'>CC BY-NC-SA 4.0</a> | <span title='${{ env.DATA_TITLE }}'>Generated on ${{ env.BUILD_TIME }} (UTC+8)\"#g" hugo.yaml
       - name: Build Static Website
         run: |
           mkdir data
