@@ -1,0 +1,12 @@
+{{ printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {{- /* 归档区保留历史问卷原文（有存档价值）但与现役页争同一批关键词，已标 noindex，这里一并排除；空 permalink 的容器页跳过 */ -}}
+  {{- range .Data.Pages }}{{ if and .Permalink (not (hasPrefix .RelPermalink "/archived")) (not .Params.noindex) }}
+  <url>
+    <loc>{{ .Permalink }}</loc>
+    {{- if not .Lastmod.IsZero }}
+    <lastmod>{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    {{- end }}
+  </url>
+  {{- end }}{{ end }}
+</urlset>

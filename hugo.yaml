@@ -7,6 +7,17 @@ description: 收集全世界各高校招生时不会写明但实实在在影响�
 copyright: "$copyright"
 disableKinds: ["taxonomy", "term", "rss"]
 
+# 归档区保留历史问卷原文，有独立存档价值；但会与现役页争同一批关键词，故不参与搜索竞争。
+# /docs/ 是无正文的分区容器页（标题还是 "Docs"）。两者都标 noindex 并排除出 sitemap
+cascade:
+  - target:
+      path: /docs/archived/**
+    params:
+      noindex: true
+  - target:
+      path: /docs
+    params:
+      noindex: true
 enableRobotsTXT: true
 
 outputs:
