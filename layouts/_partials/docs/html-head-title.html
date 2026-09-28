@@ -1,0 +1,6 @@
+{{- /*
+  覆写主题版本：允许用 front matter 的 params.bookTitle 定制 <title>，
+  与页面可见标题（.Title，如「首页」）解耦。
+*/ -}}
+{{ $title := .Params.bookTitle | default (partial "docs/title" .) }}
+{{ with $title }}{{ . }} • {{ end }}{{ .Site.Title -}}
