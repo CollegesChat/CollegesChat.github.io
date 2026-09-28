@@ -1,3 +1,6 @@
+{{- if isset .Page.Params "editlink" -}}
+  {{- if not .Page.Params.editLink -}}{{- return "" -}}{{- end -}}
+{{- end -}}
 {{- $link := .Page.Params.editLink | default .Site.Params.BookEditLink -}}
 {{- return (partial "docs/text/template" (dict "Template" $link "Context" (dict
   "Site" .Site
