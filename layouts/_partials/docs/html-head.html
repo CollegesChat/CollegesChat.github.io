@@ -1,0 +1,85 @@
+{{ "<!--" | safeHTML }}
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+{{ "-->" | safeHTML }}
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{{ or .Description .Summary | plainify | htmlUnescape }}">
+{{- if .Params.noindex }}
+<meta name="robots" content="noindex">
+{{- end }}
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#2e3440">
+<meta name="color-scheme" content="light dark">
+
+{{- with .Page.Params.BookHref -}}
+  <meta http-equiv="Refresh" content="0; url='{{ . }}'" />
+{{- end -}}
+
+{{ partial "opengraph.html" . }}
+{{ partial "schema.html" . }}
+
+{{- with .Site.Params.ogImage }}
+  {{- $ogImage := . | absURL }}
+  <meta property="og:image" content="{{ $ogImage }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ $.Site.Title }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ $ogImage }}">
+{{- end }}
+
+<title>{{ partial "docs/html-head-title" . }}</title>
+{{ partial "docs/html-head-favicon" . }}
+
+{{- $manifest := resources.Get "manifest.json" | resources.ExecuteAsTemplate "manifest.json" . }}
+<link rel="manifest" href="{{ $manifest.RelPermalink }}">
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{- if .IsHome }}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@type" "WebSite" "name" .Site.Title "url" .Site.BaseURL "description" (or .Description .Site.Title) | jsonify | safeJS }}</script>
+{{- else }}
+{{- /* 面包屑：跳过没有 URL 的容器页与站内被压平的 docs 层 */ -}}
+{{- $crumbs := slice }}
+{{- range $ancestor := .Ancestors.Reverse }}
+  {{- if and $ancestor.Permalink (ne $ancestor.Path "/docs") }}
+  {{- $crumbs = $crumbs | append (dict "@type" "ListItem" "position" (add (len $crumbs) 1) "name" (partial "docs/title" $ancestor) "item" $ancestor.Permalink) }}
+  {{- end }}
+{{- end }}
+{{- $crumbs = $crumbs | append (dict "@type" "ListItem" "position" (add (len $crumbs) 1) "name" (partial "docs/title" .) "item" .Permalink) }}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $crumbs | jsonify | safeJS }}</script>
+{{- end }}
+
+{{- range .Translations }}
+  <link rel="alternate" hreflang="{{ default .Site.Language.Locale .Language.Name }}" href="{{ .Permalink }}" title="{{ partial "docs/title" . }}">
+{{- end }}
+
+<!-- Theme stylesheet, you can customize it by creating `assets/styles/custom.css` in your website -->
+{{ partial "docs/html-head-styles" . }}
+
+<!-- Search -->
+{{- if default true .Site.Params.BookSearch -}}
+  {{- $searchJS := resources.Get "search.js"
+    | resources.ExecuteAsTemplate (printf "%s.search.js" .Language.Name) .
+    | resources.Minify | resources.Fingerprint -}}
+  <script type="module" src="{{ partial "docs/links/resource-precache" $searchJS }}" {{ template "integrity" $searchJS }}></script>
+{{- end -}}
+
+<!-- Service Worker -->
+{{- if .Site.Params.BookServiceWorker -}}
+  {{- $swJS := resources.Get "sw-register.js" | resources.ExecuteAsTemplate "sw.js" . | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $swJS.RelPermalink }}" {{ template "integrity" $swJS }}></script>
+{{ end -}}
+
+{{ partial "google_analytics.html" . }}
+
+{{- range .AlternativeOutputFormats -}}
+  {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Title | safeHTML }}
+{{ end -}}
+
+{{- define "integrity" -}}
+  {{- if (urls.Parse .Permalink).Host -}}
+    integrity="{{ .Data.Integrity }}" crossorigin="anonymous"
+  {{- end -}}
+{{- end -}}

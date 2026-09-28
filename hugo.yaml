@@ -6,6 +6,7 @@ hasCJKLanguage: true
 description: 收集全世界各高校招生时不会写明但实实在在影响大学生活质量的详尽信息
 copyright: "$copyright"
 disableKinds: ["taxonomy", "term", "rss"]
+
 enableRobotsTXT: true
 
 outputs:
@@ -42,6 +43,9 @@ menu:
       weight: 30
 
 params:
+  # og:image / twitter:image，相对 static 目录
+  ogImage: img/og-image.png
+
   # (Optional, default light) Sets color theme: light, dark or auto.
   # Theme 'auto' switches between dark and light modes based on browser/os preferences
   BookTheme: "auto"
