@@ -36,6 +36,9 @@ menu:
     - name: "Telegram"
       url: "https://t.me/joinchat/NPiGbd9ODe0wYjQ1"
       weight: 20
+    - name: "友情链接"
+      url: "/links/"
+      weight: 30
 
 params:
   # (Optional, default light) Sets color theme: light, dark or auto.
