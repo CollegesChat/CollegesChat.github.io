@@ -19,8 +19,7 @@ trap cleanup EXIT SIGINT SIGTERM
 
 main() {
 
-  GO_VERSION=1.26.3
-  HUGO_VERSION=0.163.0
+  HUGO_VERSION=0.166.0
 
   export TZ=Europe/Oslo
 
@@ -32,11 +31,10 @@ main() {
   # 将所有工具的安装和各种包管理器的缓存路径全部重定向到该目录下
   export UV_INSTALL_DIR="${CACHE_DIR}/local/bin"
   export UV_CACHE_DIR="${CACHE_DIR}/uv"
-  export GOCACHE="${CACHE_DIR}/go-build"
   export HUGO_CACHEDIR="${CACHE_DIR}/hugo-cache"
 
   # 更新 PATH，让系统优先读取项目根目录缓存中的二进制文件
-  export PATH="${CACHE_DIR}/local/bin:${CACHE_DIR}/local/go/bin:${CACHE_DIR}/local/hugo:${PATH}"
+  export PATH="${CACHE_DIR}/local/bin:${CACHE_DIR}/local/hugo:${PATH}"
 
   # 0. 检查并安装 uv
   if [ ! -f "${CACHE_DIR}/local/bin/uv" ]; then
@@ -46,33 +44,23 @@ main() {
     echo "🎉 Found uv in cache, skipping installation."
   fi
 
-  # 1. 检查并安装 Go 与 Hugo
-  if [ ! -f "${CACHE_DIR}/local/go/bin/go" ] || [ ! -f "${CACHE_DIR}/local/hugo/hugo" ]; then
+  # 1. 检查并安装 Hugo
+  if [ ! -f "${CACHE_DIR}/local/hugo/hugo" ]; then
     build_temp_dir=$(mktemp -d)
     pushd "${build_temp_dir}" > /dev/null
 
-    if [ ! -f "${CACHE_DIR}/local/go/bin/go" ]; then
-      echo "Go not found in cache. Installing Go ${GO_VERSION}..."
-      curl -sLJO "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
-      mkdir -p "${CACHE_DIR}/local"
-      tar -C "${CACHE_DIR}/local" -xf "go${GO_VERSION}.linux-amd64.tar.gz"
-    fi
-
-    if [ ! -f "${CACHE_DIR}/local/hugo/hugo" ]; then
-      echo "Hugo not found in cache. Installing Hugo ${HUGO_VERSION}..."
-      curl -sLJO "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
-      mkdir -p "${CACHE_DIR}/local/hugo"
-      tar -C "${CACHE_DIR}/local/hugo" -xf "hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
-    fi
+    echo "Hugo not found in cache. Installing Hugo ${HUGO_VERSION}..."
+    curl -sLJO "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
+    mkdir -p "${CACHE_DIR}/local/hugo"
+    tar -C "${CACHE_DIR}/local/hugo" -xf "hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
 
     popd > /dev/null
   else
-    echo "🎉 All tools (Go, Hugo) found in cache, skipping downloads."
+    echo "🎉 Hugo found in cache, skipping download."
   fi
 
   # 验证依赖
   echo "Verifying installations..."
-  echo Go: "$(go version)"
   echo Hugo: "$(hugo version)"
 
   # 2. 配置 Git
