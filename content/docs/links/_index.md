@@ -3,6 +3,7 @@ title: 友情链接
 url: /links/
 weight: 90
 bookHidden: true
+editLink: false
 ---
 
 以下是与本站相关的公益网站及友情链接，欢迎访问和了解更多信息。
