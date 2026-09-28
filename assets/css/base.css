@@ -38,3 +38,8 @@ li p {
 .markdown-inner ul li {
     margin-bottom: 4px;
 }
+
+/* 侧栏滚动条出现时防止站点标题软换行导致整栏高度漂移 */
+.book-brand a span {
+    white-space: nowrap;
+}
