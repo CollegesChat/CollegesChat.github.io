@@ -7,4 +7,6 @@ sidebar:
   hide: false
 bookCollapseSection: true
 weight: 40
+build:
+  render: never
 ---
