@@ -1,3 +1,6 @@
+.nickname{
+    display: none;
+}
 mark {
     color: #2b2200;
     background-color: #fff3a3;
