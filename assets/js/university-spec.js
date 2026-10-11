@@ -1,7 +1,9 @@
 import { initParagraphFolder } from "./fold-paragraphs.js";
 // 同省列表从每省 JSON 运行时载入；无 JS 时由 <noscript> 里的「查看全部」链接兜底
 function initSameProvinceMenu() {
-  const nav = document.querySelector(".same-province-menu[data-province-index]");
+  const nav = document.querySelector(
+    ".same-province-menu[data-province-index]",
+  );
   if (!nav) return;
 
   const url = nav.dataset.provinceIndex;
@@ -71,33 +73,15 @@ onDomReady(() => {
   //  解析页面中的 ID 信息映射。
   //  旧格式：A106 (2021年06月)
   //  新格式：A306 (2026年09月): 2026-06, 测试, （不愿透露）, 大专, 北京-北京市-东城区, 主校区
-  const infoMap = Object.fromEntries(
-    [...document.querySelectorAll("blockquote + details li")]
-      .map((li) => {
-        const text = li.textContent.trim();
-        const match = text.match(/^(A\d+)\s*\((.*?)\)(?:\s*:\s*(.*))?$/);
-        if (!match) return null;
-        const [, id, time, meta] = match;
-        return [id, { time, meta }];
-      })
-      .filter(Boolean),
-  );
-
-  const escapeHtml = (str) =>
-    str.replace(
-      /[&<>"']/g,
-      (ch) =>
-        ({
-          "&": "&",
-          "<": "<",
-          ">": ">",
-          '"': '"',
-          "'": "'",
-        })[ch],
-    );
-
-  // 新格式字段顺序固定：Q3(入学年份, 专业, 性别), Q4(学历), Q5(地区, 校区)
-  const META_LABELS = ["入学年份", "专业", "性别", "学历", "地区", "校区"];
+  const META_LABELS = [
+    "入学年份",
+    "专业",
+    "性别",
+    "学历",
+    "地区",
+    "校区",
+    "昵称",
+  ];
 
   const buildMetaLines = (meta) => {
     if (!meta || !meta.trim()) return "";
@@ -111,67 +95,96 @@ onDomReady(() => {
       .join("\n");
   };
 
+  const infoMap = Object.fromEntries(
+    [...document.querySelectorAll("blockquote + details li")]
+      .map((li) => {
+        const text = li.textContent.trim();
+        const match = text.match(/^(A\d+)\s*\((.*?)\)(?:\s*:\s*(.*))?$/);
+        if (!match) return null;
+        const [, id, time, meta] = match;
+        return [id, { time, metaLines: buildMetaLines((meta || "").trim()) }];
+      })
+      .filter(Boolean),
+  );
+
+  const escapeHtml = (str) =>
+    str.replace(
+      /[&<>"']/g,
+      (ch) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[ch],
+    );
+
   const makeIdSpan = (id, info) => {
     const actionText = isTouchDevice ? "长按反馈问题" : "右键反馈问题";
     let title = `回答时间: ${info?.time || ""}`;
-    const metaLines = buildMetaLines(info?.meta);
+    const metaLines = info?.metaLines || "";
     if (metaLines) title += `\n${metaLines}`;
     title += ` (${actionText})`;
     return `<span class="id-link" data-id="${id}" data-title="${escapeHtml(title)}">${id}</span>`;
   };
 
   //  为已有 HTML 中的 ID 添加交互式 span（后端已完成重复回答折叠）
-  document
-    .querySelectorAll('h2:is([id^="q"], [id^="自由补充"]) + ul')
-    .forEach((ul) => {
-      for (const li of ul.querySelectorAll(":scope > li")) {
-        const details = li.querySelector("details");
-        if (details) {
-          const innerItems = details.querySelectorAll("p, li");
-          if (innerItems.length) {
-            innerItems.forEach((el) => {
-              const text = el.textContent;
-              if (/^\s*A\d+[:：]/.test(text)) {
-                el.innerHTML = text.replace(/^\s*(A\d+)/, (_, id) =>
-                  makeIdSpan(id, infoMap[id]),
-                );
-              } else {
-                el.innerHTML = text.replace(/A\d+/g, (id) =>
-                  makeIdSpan(id, infoMap[id]),
-                );
-              }
-            });
-          } else {
-            const div = details.querySelector("div");
-            if (div) {
-              div.innerHTML = div.textContent.replace(/A\d+/g, (id) =>
+  document.querySelectorAll('h2[id^="q"], h2[id^="自由补充"]').forEach((h2) => {
+    // 问题标题与答案列表之间可能夹着 <p><small> 说明，
+    // 直接相邻兄弟选择器 (+) 会漏掉后面的 ul，故向后找到最近的 ul。
+    let sib = h2.nextElementSibling;
+    while (sib && sib.tagName !== "UL") sib = sib.nextElementSibling;
+    const ul = sib;
+    if (!ul) return;
+    for (const li of ul.querySelectorAll(":scope > li")) {
+      const details = li.querySelector("details");
+      if (details) {
+        const innerItems = details.querySelectorAll("p, li");
+        if (innerItems.length) {
+          innerItems.forEach((el) => {
+            const text = el.textContent;
+            if (/^\s*A\d+[:：]/.test(text)) {
+              el.innerHTML = text.replace(/^\s*(A\d+)/, (_, id) =>
+                makeIdSpan(id, infoMap[id]),
+              );
+            } else {
+              el.innerHTML = text.replace(/A\d+/g, (id) =>
                 makeIdSpan(id, infoMap[id]),
               );
             }
-          }
+          });
         } else {
-          const directPs = li.querySelectorAll(":scope > p");
-          if (directPs.length) {
-            // 保留 <p> 结构，只替换开头的 A 编号，供 fold-paragraphs 折叠
-            directPs.forEach((p) => {
-              p.innerHTML = p.textContent.replace(/^\s*(A\d+)/, (_, id) =>
-                makeIdSpan(id, infoMap[id]),
-              );
-            });
-          } else {
-            if (!/^\s*A\d+[:：]/.test(li.textContent)) continue;
-            // 某些页面会把单段回答直接输出为 li 文本。不要用
-            // li.innerHTML = li.textContent 重建节点，以免破坏已有结构。
-            const p = document.createElement("p");
-            while (li.firstChild) p.appendChild(li.firstChild);
-            li.appendChild(p);
-            p.innerHTML = p.textContent.replace(/^\s*(A\d+)/, (_, id) =>
+          const div = details.querySelector("div");
+          if (div) {
+            div.innerHTML = div.textContent.replace(/A\d+/g, (id) =>
               makeIdSpan(id, infoMap[id]),
             );
           }
         }
+      } else {
+        const directPs = li.querySelectorAll(":scope > p");
+        if (directPs.length) {
+          // 保留 <p> 结构，只替换开头的 A 编号，供 fold-paragraphs 折叠
+          directPs.forEach((p) => {
+            p.innerHTML = p.textContent.replace(/^\s*(A\d+)/, (_, id) =>
+              makeIdSpan(id, infoMap[id]),
+            );
+          });
+        } else {
+          if (!/^\s*A\d+[:：]/.test(li.textContent)) continue;
+          // 某些页面会把单段回答直接输出为 li 文本。不要用
+          // li.innerHTML = li.textContent 重建节点，以免破坏已有结构。
+          const p = document.createElement("p");
+          while (li.firstChild) p.appendChild(li.firstChild);
+          li.appendChild(p);
+          p.innerHTML = p.textContent.replace(/^\s*(A\d+)/, (_, id) =>
+            makeIdSpan(id, infoMap[id]),
+          );
+        }
       }
-    });
+    }
+  });
 
   //  电脑端：右键直接跳转
   document.addEventListener("contextmenu", (e) => {
