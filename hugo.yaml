@@ -36,6 +36,12 @@ markup:
   goldmark:
     renderer:
       unsafe: true
+    extensions:
+      cjk:
+        enable: true
+        eastAsianLineBreaks: true
+        eastAsianLineBreaksStyle: simple
+        escapedSpace: false
   tableOfContents:
     startLevel: 1
   highlight:
