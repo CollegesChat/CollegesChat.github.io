@@ -31,7 +31,6 @@ languages:
     label: "中文"
     contentDir: "content"
     weight: 1
-# Needed for mermaid/katex shortcodes
 markup:
   goldmark:
     renderer:
@@ -42,6 +41,11 @@ markup:
         eastAsianLineBreaks: true
         eastAsianLineBreaksStyle: simple
         escapedSpace: false
+      extras:
+        insert:
+          enable: true
+        mark:
+          enable: true
   tableOfContents:
     startLevel: 1
   highlight:
