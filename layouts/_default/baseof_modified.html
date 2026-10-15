@@ -7,7 +7,10 @@
     {{ partial "docs/inject/head" . }}
     {{/* 源文件在 assets/js/、assets/css/：static/ 下的文件不走 Hugo Pipes，--minify 也不会压缩它们 */}}
     {{- $js := resources.Get "js/university-spec.js"
-      | js.Build (dict "format" "esm" "minify" true)
+      | js.Build (dict "format" "esm"
+        "minify" (cond hugo.IsDevelopment false true)
+        "sourceMap" (cond hugo.IsDevelopment "linked" "none")
+        "charset" "utf8")
       | resources.Fingerprint -}}
     <script type="module" src="{{ $js.RelPermalink }}"></script>
     {{- range slice "css/university-spec.css" "css/fold-paragraphs.css" -}}
@@ -30,7 +33,9 @@
         <footer class="book-footer">
           {{ template "copyright" . }} <!-- Copyright block -->
         </footer>
-        <label for="menu-control" class="hidden book-menu-overlay" aria-hidden="true"></label>
+        <label for="menu-control"
+               class="hidden book-menu-overlay"
+               aria-hidden="true"></label>
       </div>
       {{ template "toc-container" . }} <!-- Table of Contents -->
     </main>
@@ -70,7 +75,6 @@
      aria-label="同省学校列表"
      data-province-index="{{ $.Parent.RelPermalink }}index.json">
   <div class="same-province-title">{{ $province }}高校{{ if $isArchivedUniversity }}（归档）{{ end }}</div>
-  <ul></ul>
   <noscript>
     <a class="all" href="{{ $.Parent.RelPermalink }}">查看全部 {{ len $sameProvincePages }} 所 →</a>
   </noscript>
