@@ -143,6 +143,7 @@ onDomReady(() => {
         const innerItems = details.querySelectorAll("p, li");
         if (innerItems.length) {
           innerItems.forEach((el) => {
+            if (el.firstElementChild) return;
             const text = el.textContent;
             if (/^\s*A\d+[:：]/.test(text)) {
               el.innerHTML = text.replace(/^\s*(A\d+)/, (_, id) =>
