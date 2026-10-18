@@ -1,0 +1,7 @@
+# Hugo 是 Go 模板；T044 等 Django/Jinja 规则会全数误报
+profile = "golang"
+# <title> 由 docs/html-head partial 注入，單檔 lint 看不進去
+ignore = ["H016"]
+use_gitignore = true
+# submodule，.gitignore 管不到
+extend_exclude = ["themes"]
