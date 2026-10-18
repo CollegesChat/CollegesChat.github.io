@@ -16,7 +16,7 @@ mark {
     }
 }
 
-.markdown-inner>ul:first-child {
+blockquote+details .markdown-inner>ul:first-child {
     column-count: auto;
     column-gap: 10px;
     list-style-position: inside;
