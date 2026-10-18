@@ -75,6 +75,8 @@
      aria-label="同省学校列表"
      data-province-index="{{ $.Parent.RelPermalink }}index.json">
   <div class="same-province-title">{{ $province }}高校{{ if $isArchivedUniversity }}（归档）{{ end }}</div>
+  {{/* 空 ul 是同省列表的 JS 挂载点；class 顺便让 djLint H020 认出它不是遗留空标签 */}}
+  <ul class="same-province-list"></ul>
   <noscript>
     <a class="all" href="{{ $.Parent.RelPermalink }}">查看全部 {{ len $sameProvincePages }} 所 →</a>
   </noscript>
