@@ -67,6 +67,11 @@ params:
   # og:image / twitter:image，相对 static 目录
   ogImage: img/og-image.png
 
+  # canonical / JSON-LD 用的主域名。与 baseURL 分开：baseURL 跟随部署环境走（内链要对），
+  # 这里固定指主站，把三个域名（colleges.chat、collegeschat.github.io、预览）的 SEO 权重收敛过来。
+  # 若某域名要独立收录，构建时用 --config 追加覆盖本值为该域名即可。
+  canonicalBase: https://colleges.chat/
+
   # (Optional, default light) Sets color theme: light, dark or auto.
   # Theme 'auto' switches between dark and light modes based on browser/os preferences
   BookTheme: "auto"
