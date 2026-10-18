@@ -58,7 +58,7 @@
 {{ define "menu" }}
 {{ partial "docs/search" . }}
 <div class="back-to-home">
-  <a href="{{ site.BaseURL }}">← 返回主页</a>
+  <a href="{{ "/" | relURL }}">← 返回主页</a>
 </div>
 {{ with .File }}
 {{ $filePath := .Path }}
