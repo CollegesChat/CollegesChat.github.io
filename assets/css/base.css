@@ -46,3 +46,26 @@ li p {
 .book-brand a span {
     white-space: nowrap;
 }
+
+.book-article small {
+    color: var(--gray-500);
+    font-size: 0.85em;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+}
+.book-article small.response-status {
+    display: inline-block;
+    margin-left: 0.4em;
+    padding: 0 0.4em;
+    font-size: 0.8em;
+    font-style: normal;
+    color: var(--gray-500);
+    border: 1px solid var(--gray-200);
+    border-radius: 0.25em;
+    letter-spacing: normal;
+    vertical-align: middle;
+}
+.book-article small.additional-text-prompt {
+    font-style: italic;
+    color: var(--gray-500);
+}
