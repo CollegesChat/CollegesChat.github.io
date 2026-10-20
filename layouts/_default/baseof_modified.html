@@ -94,27 +94,13 @@
 </aside>
 {{ end }}
 {{ end }}
-{{ define "footer" }}
-{{ partial "docs/footer" . }}
-{{ end }}
-{{ define "clipboard" }}
-{{ with resources.Get "clipboard.js" | resources.Minify }}
-<script>{ { .Content | safeJS } }</script>
-{{ end }}
-{{ end }}
 {{ define "copyright" }}
 {{ if or .Site.Copyright .Params.Copyright }}
 <div class="book-copyright flex justify-center">{{ partialCached "docs/copyright" . .Params.Copyright }}</div>
 {{ end }}
 {{ end }}
-{{ define "comments" }}
-{{ if and .Content (default true (default .Site.Params.BookComments .Params.BookComments)) }}
-<div class="book-comments">{{- partial "docs/comments" . -}}</div>
-{{ end }}
-{{ end }}
 {{ define "main" }}
 <article class="markdown book-article">
-  <!--<h1 id="university-name">{{ .Title }}</h1> -->
   {{- $isProvince := false -}}
   {{- with .File -}}
   {{- if and $.IsSection (or (strings.HasPrefix .Path "docs/universities/") (strings.HasPrefix .Path "docs/archived/universities/")) -}}
