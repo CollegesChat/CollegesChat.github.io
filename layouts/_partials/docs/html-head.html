@@ -31,7 +31,7 @@ https://github.com/alex-shpak/hugo-book
 {{- end }}
 
 <title>{{ partial "docs/html-head-title" . }}</title>
-{{ partial "docs/html-head-favicon" . }}
+{{ partialCached "docs/html-head-favicon" . }}
 
 {{- $manifest := resources.Get "manifest.json" | resources.ExecuteAsTemplate "manifest.json" . }}
 <link rel="manifest" href="{{ $manifest.RelPermalink }}">
@@ -58,7 +58,7 @@ https://github.com/alex-shpak/hugo-book
 {{- end }}
 
 <!-- Theme stylesheet, you can customize it by creating `assets/styles/custom.css` in your website -->
-{{ partial "docs/html-head-styles" . }}
+{{ partialCached "docs/html-head-styles" . }}
 
 <!-- Search -->
 {{- if default true .Site.Params.BookSearch -}}
@@ -74,7 +74,7 @@ https://github.com/alex-shpak/hugo-book
   <script defer src="{{ $swJS.RelPermalink }}" {{ template "integrity" $swJS }}></script>
 {{ end -}}
 
-{{ partial "google_analytics.html" . }}
+{{ partialCached "google_analytics.html" . }}
 
 {{- range .AlternativeOutputFormats -}}
   {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Title | safeHTML }}

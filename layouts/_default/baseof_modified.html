@@ -4,7 +4,7 @@
       data-theme="{{ default "light" .Site.Params.BookTheme }}">
   <head>
     {{ partial "docs/html-head" . }}
-    {{ partial "docs/inject/head" . }}
+    {{ partialCached "docs/inject/head" . }}
     {{/* 源文件在 assets/js/、assets/css/：static/ 下的文件不走 Hugo Pipes，--minify 也不会压缩它们 */}}
     {{- $js := resources.Get "js/university-spec.js"
       | js.Build (dict "format" "esm"
@@ -56,7 +56,7 @@
 </aside>
 {{ end }}
 {{ define "menu" }}
-{{ partial "docs/search" . }}
+{{ partialCached "docs/search" . }}
 <div class="back-to-home">
   <a href="{{ "/" | relURL }}">← 返回主页</a>
 </div>
@@ -104,7 +104,7 @@
 {{ end }}
 {{ define "copyright" }}
 {{ if or .Site.Copyright .Params.Copyright }}
-<div class="book-copyright flex justify-center">{{ partial "docs/copyright" . }}</div>
+<div class="book-copyright flex justify-center">{{ partialCached "docs/copyright" . .Params.Copyright }}</div>
 {{ end }}
 {{ end }}
 {{ define "comments" }}
