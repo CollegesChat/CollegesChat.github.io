@@ -44,6 +44,7 @@
 .same-province-menu li a {
   display: block;
   padding: 0.2rem 0;
+  min-height: 24px;
   overflow: hidden;
   color: inherit;
   text-overflow: ellipsis;
@@ -79,6 +80,7 @@
 .province-list a {
   display: block;
   padding: 0.2rem 0;
+  min-height: 24px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -223,4 +225,17 @@ li p {
 .book-copyright a[href] {
     text-decoration: underline;
     text-underline-offset: 2px;
+}
+
+.markdown .footnote-backref {
+    display: inline-block;
+    min-width: 24px;
+    min-height: 24px;
+    line-height: 24px;
+    text-align: center;
+}
+
+img.book-icon {
+    width: 1em;
+    height: 1em;
 }
