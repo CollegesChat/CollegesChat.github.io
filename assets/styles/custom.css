@@ -138,3 +138,73 @@
   right: 10px;
   top: 5px;
 }
+
+.nickname{
+    display: none;
+}
+mark {
+    color: #2b2200;
+    background-color: #fff3a3;
+    border-radius: 2px;
+    padding: 0 0.15em;
+}
+
+/* inherit 在深色下拿到的是浅色字（约 1:1），故显式配色；不用 light-dark()（需 Chrome 123+） */
+@media (prefers-color-scheme: dark) {
+    :root[data-theme$="auto"] mark {
+        color: #ffe9a3;
+        background-color: #6b5410;
+    }
+}
+
+blockquote+details .markdown-inner>ul:first-child {
+    column-count: auto;
+    column-gap: 10px;
+    list-style-position: inside;
+    column-width: 180px;
+}
+
+
+.markdown li>details {
+    padding: var(--space-8);
+    margin: 0;
+}
+
+li p {
+    margin: 0;
+}
+
+.markdown-inner ul {
+    margin-top: var(--space-4);
+    padding-inline-start: 1.2rem;
+}
+
+.markdown-inner ul li {
+    margin-bottom: var(--space-4);
+}
+
+/* 侧栏滚动条出现时防止站点标题软换行导致整栏高度漂移 */
+.book-brand a span {
+    white-space: nowrap;
+}
+
+.book-article small {
+    color: var(--gray-500);
+    letter-spacing: 0.01em;
+}
+.book-article small.response-status {
+    display: inline-block;
+    margin-left: 0.4em;
+    padding: 0 0.4em;
+    font-size: 0.8em;
+    font-style: normal;
+    color: var(--gray-500);
+    border: 1px solid var(--gray-200);
+    border-radius: 0.25em;
+    letter-spacing: normal;
+    vertical-align: middle;
+}
+.book-article small.additional-text-prompt {
+    font-style: italic;
+    color: var(--gray-500);
+}
