@@ -41,21 +41,13 @@ export function initParagraphFolder() {
     return el.getBoundingClientRect().height > lineHeight * 3 + 0.5;
   };
 
-  // 遍历回答分组并处理折叠
+  const foldables = [];
   groups.forEach((ps) => {
     // 1. 单段回答处理
     if (ps.length === 1) {
       const p = ps[0];
       p.classList.add("foldable-p");
-
-      if (isLongerThanThreeLines(p)) {
-        p.classList.add("is-clamped");
-        const btn = makeBtn(() => {
-          const isClamped = p.classList.toggle("is-clamped");
-          btn.textContent = isClamped ? "展开全文 ↓" : "收起全文 ↑";
-        });
-        p.after(btn);
-      }
+      foldables.push({ el: p, li: p.parentElement, single: true });
       return;
     }
 
@@ -68,14 +60,18 @@ export function initParagraphFolder() {
     wrap.className = "fold-wrap";
     ps.forEach((p) => wrap.appendChild(p));
     li.prepend(wrap);
+    foldables.push({ el: wrap, li, single: false });
+  });
 
-    if (isLongerThanThreeLines(wrap)) {
-      wrap.classList.add("is-clamped");
+  foldables
+    .filter((t) => isLongerThanThreeLines(t.el))
+    .forEach((t) => {
+      t.el.classList.add("is-clamped");
       const btn = makeBtn(() => {
-        const isClamped = wrap.classList.toggle("is-clamped");
+        const isClamped = t.el.classList.toggle("is-clamped");
         btn.textContent = isClamped ? "展开全文 ↓" : "收起全文 ↑";
       });
-      li.append(btn);
-    }
-  });
+      if (t.single) t.el.after(btn);
+      else t.li.append(btn);
+    });
 }
