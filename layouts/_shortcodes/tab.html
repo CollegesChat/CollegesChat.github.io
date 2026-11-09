@@ -7,8 +7,11 @@
 {{- /* questionnaire titles, read from fixed YAML (data/v1.yaml, data/v2.yaml) keyed by tab name */ -}}
 {{- $version := .Get 0 -}}
 {{- $qs := index (dict "v1" hugo.Data.v1 "v2" hugo.Data.v2) $version -}}
-{{- /* render inner to HTML to extract heading anchors for TOC */ -}}
+{{- /* render inner to HTML, prefix heading anchors with v1-/v2- so they never collide */ -}}
+{{- $prefix := printf "%s-" ($version | replaceRE `^(v[12]).*` "$1") -}}
 {{- $rendered := .Page.RenderString .Inner -}}
+{{- $rendered = replaceRE `(<h[1-6][^>]*id=")` (printf `${1}%s` $prefix) $rendered -}}
+{{- $rendered = replaceRE `(<a class="anchor"[^>]*href="#)` (printf `${1}%s` $prefix) $rendered -}}
 {{- $headings := slice -}}
 {{- $h2Blocks := findRE `<h2[^>]*id="[^"]*"[^>]*>.*?</h2>` $rendered -}}
 {{- range $block := $h2Blocks -}}
@@ -30,13 +33,10 @@
 {{- $toc := .Parent.Store.Get "toc" -}}
 {{- $toc = $toc | append (dict "tab" $tab "headings" $headings) -}}
 {{- .Parent.Store.Set "toc" $toc -}}
-<input type="radio" class="toggle" name="{{ $group }}" id="{{ $tab }}" {{ if not .Ordinal }}checked="checked"{{ end }} />
-{{- /* remove whitespaces */ -}}
-<label for="{{ $tab }}">
-  {{- .Get 0 -}}
-</label>
-{{- /* remove whitespaces */ -}}
-<div class="book-tabs-content markdown-inner">
-{{ .Inner -}}
+<div class="book-tabs-content markdown-inner" data-index="{{ .Ordinal }}">
+{{ $rendered | safeHTML -}}
 </div>
+<a href="#{{ $tab }}" id="{{ $tab }}" class="book-tabs-label">
+  {{- .Get 0 -}}
+</a>
 {{- /* remove whitespaces */ -}}

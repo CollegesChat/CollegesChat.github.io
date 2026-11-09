@@ -239,3 +239,27 @@ img.book-icon {
     width: 1em;
     height: 1em;
 }
+
+.book-tabs > a.book-tabs-label[href] {
+    padding: var(--space-8) var(--space-16);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color .15s;
+}
+.book-tabs > a.book-tabs-label:hover {
+    box-shadow: inset 0 -1px 0 var(--color-link);
+}
+/* active tab highlight: default first, label is :target, or preceding content contains :target */
+.book-tabs:not(:has(:target)) > a.book-tabs-label:first-of-type,
+.book-tabs > a.book-tabs-label:target,
+.book-tabs > .book-tabs-content:has(:target) + a.book-tabs-label {
+    box-shadow: inset 0 -2px 0 var(--color-link);
+    color: var(--color-link);
+    font-weight: 600;
+    background: color-mix(in srgb, var(--color-link) 12%, transparent);
+}
+.book-tabs:not(:has(:target)) > .book-tabs-content:first-of-type { display: block; }
+.book-tabs:has(:target) > .book-tabs-content { display: none; }
+.book-tabs > .book-tabs-content:has(+ a.book-tabs-label:target),
+.book-tabs > .book-tabs-content:has(:target) { display: block; }
