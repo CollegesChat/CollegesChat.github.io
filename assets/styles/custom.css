@@ -235,6 +235,16 @@ li p {
     text-align: center;
 }
 
+.markdown a.footnote-ref[href] {
+    text-decoration: none;
+    font-weight: 600;
+}
+.markdown a.footnote-ref[href]::before { content: '['; }
+.markdown a.footnote-ref[href]::after { content: ']'; }
+.markdown sup + sup {
+    margin-left: 0.3em;
+}
+
 img.book-icon {
     width: 1em;
     height: 1em;
