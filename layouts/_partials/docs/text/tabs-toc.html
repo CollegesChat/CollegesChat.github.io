@@ -25,10 +25,10 @@
 {{- /* :has() rules: hide all lists by default, show the active tab's list */ -}}
 {{- $style := printf `<style>nav.book-tabs-toc[data-group="%s"] ul{display:none;margin:0;padding:0;list-style:none;}` $group -}}
 {{- /* default: first tab's TOC when nothing is targeted (no nested :has(), which Chrome drops) */ -}}
-{{- $style = printf `%smain:not(:has(:target)) nav.book-tabs-toc[data-group="%s"] ul[data-index="0"]{display:block;}` $style $group -}}
+{{- $style = printf `%smain:not(:has(:target, .is-active)) nav.book-tabs-toc[data-group="%s"] ul[data-index="0"]{display:block;}` $style $group -}}
 {{- range $i, $entry := $toc -}}
-  {{- /* tab label is :target (user clicked the tab) */ -}}
-  {{- $style = printf `%smain:has(a#%s:target) nav.book-tabs-toc[data-group="%s"] ul[data-index="%d"]{display:block;}` $style $entry.tab $group $i -}}
+  {{- /* tab label is :target (user clicked the tab), or .is-active (hash 里的 tab 锚点，见 university-spec.js) */ -}}
+  {{- $style = printf `%smain:has(a#%s:is(:target, .is-active)) nav.book-tabs-toc[data-group="%s"] ul[data-index="%d"]{display:block;}` $style $entry.tab $group $i -}}
   {{- /* or a heading inside the tab content is deep-linked (descendant :target, not nested :has) */ -}}
   {{- $style = printf `%smain:has(.book-tabs-content[data-index="%d"] :target) nav.book-tabs-toc[data-group="%s"] ul[data-index="%d"]{display:block;}` $style $i $group $i -}}
 {{- end -}}

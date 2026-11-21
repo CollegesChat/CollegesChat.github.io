@@ -200,7 +200,7 @@ onDomReady(() => {
       return;
     }
     e.preventDefault();
-    triggerReport(el.dataset.id);
+    triggerReport(el.dataset.id, el);
   });
 
   //  移动端专门处理：精准区分“轻点看日期”与“长按 800ms 跳转”
@@ -213,7 +213,14 @@ onDomReady(() => {
       window.location.pathname +
       window.location.search;
 
-    const myHighlightUrl = `${currentBaseUrl}#:~:text=${id}`;
+    // 目标 ID 落在 tab 内容里时把 tab 锚点前置（#tabs-1-1:~:text=A106）：
+    // 否则落地页停在首个 tab，目标文本处于 display:none，text fragment 无法高亮。
+    const tabLabel = el?.closest(".book-tabs-content")?.nextElementSibling;
+    const tabAnchor =
+      tabLabel?.classList.contains("book-tabs-label") && tabLabel.id
+        ? tabLabel.id
+        : "";
+    const myHighlightUrl = `${currentBaseUrl}#${tabAnchor}:~:text=${id}`;
 
     window.open(
       `https://github.com/CollegesChat/university-information/issues/new?template=malicious_data.yml&title=${encodeURIComponent(
@@ -292,6 +299,23 @@ onDomReady(() => {
         .forEach((node) => node.classList.remove("show-tip"));
     }
   });
+
+  // Chrome 应用 text fragment 时会把 :target 让给匹配元素（页面顶部的答案索引常常先命中），
+  // tab 的 :target 规则随之失效；这里按 hash 里的 tab 锚点补 is-active，让 CSS 仍能展开对应 tab。
+  function syncTabFromHash() {
+    document
+      .querySelectorAll(".book-tabs-label.is-active")
+      .forEach((label) => label.classList.remove("is-active"));
+    const anchor = location.hash.slice(1).split(":~:")[0];
+    if (!/^tabs-\d+-\d+$/.test(anchor)) return;
+    const label = document.getElementById(anchor);
+    if (label?.classList.contains("book-tabs-label")) {
+      label.classList.add("is-active");
+    }
+  }
+  syncTabFromHash();
+  window.addEventListener("hashchange", syncTabFromHash);
+
   initParagraphFolder();
   initSameProvinceMenu();
 });

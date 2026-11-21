@@ -287,26 +287,27 @@ img.book-icon {
   box-shadow: inset 0 -1px 0 var(--color-link);
 }
 
-/* active tab highlight: default first, label is :target, or preceding content contains :target */
-.book-tabs:not(:has(:target)) > a.book-tabs-label:first-of-type,
-.book-tabs > a.book-tabs-label:target,
-.book-tabs > .book-tabs-content:has(:target) + a.book-tabs-label {
+/* active tab highlight: default first, label is :target, or preceding content contains :target.
+   `.is-active` 是 JS 按 hash 补的激活标记，见 university-spec.js。 */
+.book-tabs:not(:has(:target, .is-active)) > a.book-tabs-label:first-of-type,
+.book-tabs > a.book-tabs-label:is(:target, .is-active),
+.book-tabs > .book-tabs-content:has(:target, .is-active) + a.book-tabs-label {
   box-shadow: inset 0 -2px 0 var(--color-link);
   color: var(--color-link);
   font-weight: 600;
   background: color-mix(in srgb, var(--color-link) 12%, transparent);
 }
 
-.book-tabs:not(:has(:target)) > .book-tabs-content:first-of-type {
+.book-tabs:not(:has(:target, .is-active)) > .book-tabs-content:first-of-type {
   display: block;
 }
 
-.book-tabs:has(:target) > .book-tabs-content {
+.book-tabs:has(:target, .is-active) > .book-tabs-content {
   display: none;
 }
 
-.book-tabs > .book-tabs-content:has(+ a.book-tabs-label:target),
-.book-tabs > .book-tabs-content:has(:target) {
+.book-tabs > .book-tabs-content:has(+ a.book-tabs-label:is(:target, .is-active)),
+.book-tabs > .book-tabs-content:has(:target, .is-active) {
   display: block;
 }
 
@@ -318,9 +319,9 @@ img.book-icon {
     background-color: rgba(128, 128, 128, 0.1);
   }
 
-  .book-tabs:not(:has(:target)) > a.book-tabs-label:first-of-type,
-  .book-tabs > a.book-tabs-label:target,
-  .book-tabs > .book-tabs-content:has(:target) + a.book-tabs-label {
+  .book-tabs:not(:has(:target, .is-active)) > a.book-tabs-label:first-of-type,
+  .book-tabs > a.book-tabs-label:is(:target, .is-active),
+  .book-tabs > .book-tabs-content:has(:target, .is-active) + a.book-tabs-label {
     background: rgba(128, 128, 128, 0.12);
   }
 }
