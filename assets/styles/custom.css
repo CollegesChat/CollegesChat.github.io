@@ -273,3 +273,16 @@ img.book-icon {
 .book-tabs:has(:target) > .book-tabs-content { display: none; }
 .book-tabs > .book-tabs-content:has(+ a.book-tabs-label:target),
 .book-tabs > .book-tabs-content:has(:target) { display: block; }
+
+/* color-mix() fallback for browsers without support (Chrome < 111, Safari < 16.2) */
+@supports not (background-color: color-mix(in srgb, red, blue)) {
+    .book-hint,
+    .book-badge {
+        background-color: rgba(128, 128, 128, 0.1);
+    }
+    .book-tabs:not(:has(:target)) > a.book-tabs-label:first-of-type,
+    .book-tabs > a.book-tabs-label:target,
+    .book-tabs > .book-tabs-content:has(:target) + a.book-tabs-label {
+        background: rgba(128, 128, 128, 0.12);
+    }
+}

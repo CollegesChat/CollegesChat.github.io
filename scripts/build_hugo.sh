@@ -4,6 +4,13 @@ set -euo pipefail
 
 scripts/fetch_questionnaires.sh
 
+# 安装 PostCSS 依赖，供 Hugo css.PostCSS 转译现代 CSS（嵌套、color-mix 等）
+if [ ! -d node_modules ]; then
+  echo "Installing npm dependencies..."
+  npm ci
+fi
+export PATH="$(pwd)/node_modules/.bin:${PATH}"
+
 # Cloudflare 会给 CF_PAGES_URL，用它覆盖 baseURL；GitHub Pages 没有，走配置里的默认值
 if [[ -n "${CF_PAGES_URL:-}" ]]; then
   echo "Found CF_PAGES_URL: ${CF_PAGES_URL}, overriding Hugo baseURL."

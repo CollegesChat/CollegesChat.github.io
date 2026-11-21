@@ -1,5 +1,6 @@
 public/
 resources/
+node_modules/
 .hugo_build.lock
 content/docs/*
 .playwright-mcp
