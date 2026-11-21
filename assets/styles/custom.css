@@ -311,7 +311,7 @@ img.book-icon {
   display: block;
 }
 
-/* color-mix() fallback for browsers without support (Chrome < 111, Safari < 16.2) */
+/* color-mix() fallback for browsers without support (Chrome < 111, Safari < 16.2, Firefox < 113) */
 
 @supports not (background-color: color-mix(in srgb, red, blue)) {
   .book-hint,
