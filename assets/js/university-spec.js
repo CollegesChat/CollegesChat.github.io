@@ -130,7 +130,10 @@ onDomReady(() => {
   };
 
   //  为已有 HTML 中的 ID 添加交互式 span（后端已完成重复回答折叠）
-  document.querySelectorAll('h2[id^="q"], h2[id^="自由补充"]').forEach((h2) => {
+  //  tab 页的标题 id 被 tab 短代码加了 v1-/v2- 前缀（见 layouts/_shortcodes/tab.html），
+  //  去掉可选版本前缀后再匹配 q-/自由补充，否则 tab 页一个标题都抓不到。
+  document.querySelectorAll("h2[id]").forEach((h2) => {
+    if (!/^(v[12]-)?(q-|自由补充)/.test(h2.id)) return;
     // 问题标题与答案列表之间可能夹着 <p><small> 说明，
     // 直接相邻兄弟选择器 (+) 会漏掉后面的 ul，故向后找到最近的 ul。
     let sib = h2.nextElementSibling;
