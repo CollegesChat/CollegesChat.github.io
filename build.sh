@@ -19,7 +19,7 @@ trap cleanup EXIT SIGINT SIGTERM
 
 main() {
 
-  HUGO_VERSION=0.168.0
+  HUGO_VERSION=0.170.1
 
   export TZ=Europe/Oslo
 
