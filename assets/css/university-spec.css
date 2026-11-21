@@ -6,36 +6,36 @@
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
-}
 
-.id-link::after {
-  content: attr(data-title);
-  position: absolute;
-  top: calc(100% + var(--space-8));
-  left: 50%;
-  z-index: 999;
-  transform: translateX(-50%);
-  border: 1px solid rgba(128, 128, 128, 0.3);
+  &::after {
+    content: attr(data-title);
+    position: absolute;
+    top: calc(100% + var(--space-8));
+    left: 50%;
+    z-index: 999;
+    transform: translateX(-50%);
+    border: 1px solid rgba(128, 128, 128, 0.3);
 
-  width: max-content;
-  max-width: min(360px, 85vw);
-  max-height: 50vh;
-  box-sizing: border-box;
-  overflow-y: auto;
+    width: max-content;
+    max-width: min(360px, 85vw);
+    max-height: 50vh;
+    box-sizing: border-box;
+    overflow-y: auto;
 
-  padding: 6px 12px;
-  border-radius: var(--border-radius);
-  background: var(--body-background);
-  color: var(--body-font-color);
-  font: 12px/1.5 sans-serif;
-  text-align: left;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    background: var(--body-background);
+    color: var(--body-font-color);
+    font: 12px / 1.5 sans-serif;
+    text-align: left;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 
-  opacity: 0;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
 }
 
 @media (hover: hover) {
@@ -45,17 +45,18 @@
 
   /* 折叠回答的 p 必须 overflow:hidden 才能实现三行截断。
      用 CSS Anchor Positioning 把提示框移出折叠容器的裁剪区域。 */
+
   @supports (anchor-name: --id-tip) and (top: anchor(bottom)) {
     .is-clamped .id-link:hover {
       anchor-name: --id-tip-anchor;
-    }
 
-    .is-clamped .id-link:hover::after {
-      position: fixed;
-      position-anchor: --id-tip-anchor;
-      top: calc(anchor(bottom) + var(--space-8));
-      left: anchor(center);
-      transform: translateX(-50%);
+      &::after {
+        position: fixed;
+        position-anchor: --id-tip-anchor;
+        top: calc(anchor(bottom) + var(--space-8));
+        left: anchor(center);
+        transform: translateX(-50%);
+      }
     }
   }
 }

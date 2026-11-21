@@ -18,12 +18,12 @@
 .fold-wrap.is-clamped p {
   display: inline;
   margin: 0;
+  + p::before {
+    content: " ";
+  }
 }
 
 /* 多段折叠时，段落之间自动补充空格隔开 */
-.fold-wrap.is-clamped p+p::before {
-  content: " ";
-}
 
 /* 展开/收起 按钮样式 */
 .fold-toggle-btn {
@@ -36,8 +36,8 @@
   margin-bottom: var(--space-4);
   user-select: none;
   -webkit-user-select: none;
-}
 
-.fold-toggle-btn:hover {
-  text-decoration: underline;
+  &:hover {
+    text-decoration: underline;
+  }
 }

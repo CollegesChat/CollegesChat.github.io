@@ -21,6 +21,40 @@
   margin: 1rem 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li a {
+    display: block;
+    padding: 0.2rem 0;
+    min-height: 24px;
+    overflow: hidden;
+    color: inherit;
+    text-overflow: ellipsis;
+  }
+
+  li.active a {
+    color: var(--color-link);
+    font-weight: 700;
+  }
+
+  li.load-failed {
+    padding: 0.2rem 0;
+    color: var(--color-accent-default);
+    font-size: 0.85rem;
+  }
+
+  a.all {
+    display: block;
+    margin-top: 0.4rem;
+    padding: 0.2rem 0;
+    color: var(--color-accent-default);
+    font-size: 0.85rem;
+  }
 }
 
 .same-province-title {
@@ -35,55 +69,21 @@
   font-weight: 700;
 }
 
-.same-province-menu ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.same-province-menu li a {
-  display: block;
-  padding: 0.2rem 0;
-  min-height: 24px;
-  overflow: hidden;
-  color: inherit;
-  text-overflow: ellipsis;
-}
-
-.same-province-menu li.active a {
-  color: var(--color-link);
-  font-weight: 700;
-}
-
-.same-province-menu li.load-failed {
-  padding: 0.2rem 0;
-  color: var(--color-accent-default);
-  font-size: 0.85rem;
-}
-
-.same-province-menu a.all {
-  display: block;
-  margin-top: 0.4rem;
-  padding: 0.2rem 0;
-  color: var(--color-accent-default);
-  font-size: 0.85rem;
-}
-
 .province-list {
   margin: 0;
   padding: 0;
   list-style: none;
   columns: 3;
   column-gap: 2rem;
-}
 
-.province-list a {
-  display: block;
-  padding: 0.2rem 0;
-  min-height: 24px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  a {
+    display: block;
+    padding: 0.2rem 0;
+    min-height: 24px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
 @media screen and (max-width: 900px) {
@@ -100,12 +100,13 @@
 
 .book-header {
   display: contents;
-}
-.book-header > div {
-  position: sticky;
-  top: 0px;
-  z-index: 100;
-  background-color: var(--body-background);
+
+  > div {
+    position: sticky;
+    top: 0px;
+    z-index: 100;
+    background-color: var(--body-background);
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -113,11 +114,13 @@
     display: none;
   }
 }
+
 @media (min-width: 1024px) {
   body > main > div > header > div > h3 {
     font-size: 36px;
   }
 }
+
 #browser-warning {
   position: fixed;
   top: 0;
@@ -131,6 +134,7 @@
   border-bottom: 1px solid #ffeeba;
   display: none;
 }
+
 #close-warning {
   background: none;
   border: none;
@@ -141,60 +145,61 @@
   top: 5px;
 }
 
-.nickname{
-    display: none;
+.nickname {
+  display: none;
 }
+
 mark {
-    color: #2b2200;
-    background-color: #fff3a3;
-    border-radius: 2px;
-    padding: 0 0.15em;
+  color: #2b2200;
+  background-color: #fff3a3;
+  border-radius: 2px;
+  padding: 0 0.15em;
 }
 
 /* inherit 在深色下拿到的是浅色字（约 1:1），故显式配色；不用 light-dark()（需 Chrome 123+） */
+
 @media (prefers-color-scheme: dark) {
-    :root[data-theme$="auto"] mark {
-        color: #ffe9a3;
-        background-color: #6b5410;
-    }
+  :root[data-theme$="auto"] mark {
+    color: #ffe9a3;
+    background-color: #6b5410;
+  }
 }
 
-blockquote+details .markdown-inner>ul:first-child {
-    column-count: auto;
-    column-gap: 10px;
-    list-style-position: inside;
-    column-width: 180px;
+blockquote + details .markdown-inner > ul:first-child {
+  column-count: auto;
+  column-gap: 10px;
+  list-style-position: inside;
+  column-width: 180px;
 }
 
-
-.markdown li>details {
-    padding: var(--space-8);
-    margin: 0;
+.markdown li > details {
+  padding: var(--space-8);
+  margin: 0;
 }
 
 li p {
-    margin: 0;
+  margin: 0;
 }
 
 .markdown-inner ul {
-    margin-top: var(--space-4);
-    padding-inline-start: 1.2rem;
-}
+  margin-top: var(--space-4);
+  padding-inline-start: 1.2rem;
 
-.markdown-inner ul li {
+  li {
     margin-bottom: var(--space-4);
+  }
 }
 
 /* 侧栏滚动条出现时防止站点标题软换行导致整栏高度漂移 */
 .book-brand a span {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 .book-article small {
-    color: var(--color-accent-default);
-    letter-spacing: 0.01em;
-}
-.book-article small.response-status {
+  color: var(--color-accent-default);
+  letter-spacing: 0.01em;
+
+  &.response-status {
     display: inline-block;
     margin-left: 0.4em;
     padding: 0 0.4em;
@@ -205,84 +210,106 @@ li p {
     border-radius: 0.25em;
     letter-spacing: normal;
     vertical-align: middle;
-}
-.book-article small.additional-text-prompt {
+  }
+
+  &.additional-text-prompt {
     font-style: italic;
     color: var(--color-accent-default);
+  }
 }
 
 :root[data-theme$="dark"] {
-    --color-link: #88c0d0;
+  --color-link: #88c0d0;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root[data-theme$="auto"] {
-        --color-link: #88c0d0;
-    }
+  :root[data-theme$="auto"] {
+    --color-link: #88c0d0;
+  }
 }
 
 .markdown a[href]:not(.anchor),
 .book-copyright a[href] {
-    text-decoration: underline;
-    text-underline-offset: 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .markdown .footnote-backref {
-    display: inline-block;
-    min-width: 24px;
-    min-height: 24px;
-    line-height: 24px;
-    text-align: center;
+  display: inline-block;
+  min-width: 24px;
+  min-height: 24px;
+  line-height: 24px;
+  text-align: center;
 }
 
 .markdown a.footnote-ref[href] {
-    text-decoration: none;
-    font-weight: 600;
+  text-decoration: none;
+  font-weight: 600;
+
+  &::before {
+    content: '[';
+  }
+
+  &::after {
+    content: ']';
+  }
 }
-.markdown a.footnote-ref[href]::before { content: '['; }
-.markdown a.footnote-ref[href]::after { content: ']'; }
+
 .markdown sup + sup {
-    margin-left: 0.3em;
+  margin-left: 0.3em;
 }
 
 img.book-icon {
-    width: 1em;
-    height: 1em;
+  width: 1em;
+  height: 1em;
 }
 
 .book-tabs > a.book-tabs-label[href] {
-    padding: var(--space-8) var(--space-16);
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-    transition: background-color .15s;
+  padding: var(--space-8) var(--space-16);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color .15s;
 }
+
 .book-tabs > a.book-tabs-label:hover {
-    box-shadow: inset 0 -1px 0 var(--color-link);
+  box-shadow: inset 0 -1px 0 var(--color-link);
 }
+
 /* active tab highlight: default first, label is :target, or preceding content contains :target */
 .book-tabs:not(:has(:target)) > a.book-tabs-label:first-of-type,
 .book-tabs > a.book-tabs-label:target,
 .book-tabs > .book-tabs-content:has(:target) + a.book-tabs-label {
-    box-shadow: inset 0 -2px 0 var(--color-link);
-    color: var(--color-link);
-    font-weight: 600;
-    background: color-mix(in srgb, var(--color-link) 12%, transparent);
+  box-shadow: inset 0 -2px 0 var(--color-link);
+  color: var(--color-link);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--color-link) 12%, transparent);
 }
-.book-tabs:not(:has(:target)) > .book-tabs-content:first-of-type { display: block; }
-.book-tabs:has(:target) > .book-tabs-content { display: none; }
+
+.book-tabs:not(:has(:target)) > .book-tabs-content:first-of-type {
+  display: block;
+}
+
+.book-tabs:has(:target) > .book-tabs-content {
+  display: none;
+}
+
 .book-tabs > .book-tabs-content:has(+ a.book-tabs-label:target),
-.book-tabs > .book-tabs-content:has(:target) { display: block; }
+.book-tabs > .book-tabs-content:has(:target) {
+  display: block;
+}
 
 /* color-mix() fallback for browsers without support (Chrome < 111, Safari < 16.2) */
+
 @supports not (background-color: color-mix(in srgb, red, blue)) {
-    .book-hint,
-    .book-badge {
-        background-color: rgba(128, 128, 128, 0.1);
-    }
-    .book-tabs:not(:has(:target)) > a.book-tabs-label:first-of-type,
-    .book-tabs > a.book-tabs-label:target,
-    .book-tabs > .book-tabs-content:has(:target) + a.book-tabs-label {
-        background: rgba(128, 128, 128, 0.12);
-    }
+  .book-hint,
+  .book-badge {
+    background-color: rgba(128, 128, 128, 0.1);
+  }
+
+  .book-tabs:not(:has(:target)) > a.book-tabs-label:first-of-type,
+  .book-tabs > a.book-tabs-label:target,
+  .book-tabs > .book-tabs-content:has(:target) + a.book-tabs-label {
+    background: rgba(128, 128, 128, 0.12);
+  }
 }
