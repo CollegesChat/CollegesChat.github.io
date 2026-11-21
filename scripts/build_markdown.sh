@@ -13,5 +13,5 @@ wget https://github.com/CollegesChat/china-university-list/releases/latest/downl
 "${here}/fetch_home_readme.sh"
 cat output.csv >> ./required/colleges.csv
 uv sync
-uv run python main.py
+uv run python -m generator build
 popd > /dev/null
