@@ -47,6 +47,10 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "generator/uv.lock"
       - name: Build Markdown
+        # venv 必须放在站点目录外：.venv/bin/python 是指向 uv python 的符号链接，
+        # Hugo 0.166+ 会在符号链接指向项目外时拒绝运行 PostCSS
+        env:
+          UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/generator-venv
         run: scripts/build_markdown.sh
       - name: Assign per-province URLs
         # 各省要有独立网址，index.json 才有落点；否则 36 个省全压到 /universities/ 互相覆盖
