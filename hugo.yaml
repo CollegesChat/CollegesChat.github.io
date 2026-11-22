@@ -18,10 +18,10 @@ cascade:
       path: /docs
     params:
       noindex: true
+    # /docs/ 是无正文的容器页：正文 0 字节，整页 754 KB 全是与首页相同的侧栏副本
+    build:
+      render: never
 enableRobotsTXT: true
-
-outputs:
-  section: ["HTML", "JSON"]
 
 # Book configuration
 disablePathToLower: true
