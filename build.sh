@@ -78,6 +78,9 @@ main() {
   git clone https://github.com/CollegesChat/website-generator.git generator
 
   # 4. 运行 Python 脚本生成 Markdown (此时 uv 会自动命中并在 .cache/uv 下读写缓存)
+  # venv 不能落在项目内：.venv/bin/python 是指向 uv 解释器的符号链接，
+  # Hugo 0.166+ 的 Node 沙箱会因符号链接指向项目外而拒绝运行 PostCSS
+  export UV_PROJECT_ENVIRONMENT="${TMPDIR:-/tmp}/website-generator-venv"
   echo "Building Markdown files with uv..."
   scripts/build_markdown.sh
 
