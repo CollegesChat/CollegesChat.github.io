@@ -24,5 +24,5 @@ This project reads the following environment variables (standard Hugo variables 
 | Variable | Description | Default | Example |
 | --- | --- | --- | --- |
 | `HUGO_OLD_SITE_URL` | When set, the sidebar renders a "return to old version" link pointing to the same page path on the old site. Keeps the legacy site reachable during migration. | unset — link is hidden | `https://old.example.com` |
-| `HUGO_COPYRIGHT` | Overrides the footer copyright line without editing `hugo.yaml`. `local_preview.sh` exports it from `scripts/copyright_line.sh`; CI injects the same value into the `copyright: "$copyright"` placeholder via `sed`. | falls back to `hugo.yaml` `copyright` placeholder | output of `scripts/copyright_line.sh` |
+| `HUGO_COPYRIGHT` | Overrides the footer copyright line without editing `hugo.yaml`. Both `local_preview.sh` and `scripts/build_hugo.sh` set it from `scripts/copyright_line.sh`. | falls back to `hugo.yaml` `copyright` placeholder | output of `scripts/copyright_line.sh` |
 | `CF_PAGES_URL` | Auto-injected by Cloudflare Pages at build time. When present, `scripts/build_hugo.sh` passes it to Hugo as `baseURL` (`hugo -b`); on GitHub Pages it is absent and the `baseURL` from `hugo.yaml` is used. | unset on GitHub Pages / auto-set on Cloudflare Pages | `https://<project>.pages.dev` |
