@@ -8,7 +8,6 @@ export LOGURU_COLORIZE=False
 here=$(cd -- "$(dirname -- "$0")" && pwd)
 
 pushd generator > /dev/null
-# -O: wget 默认另存为 *.1 而非覆盖
 wget https://github.com/CollegesChat/china-university-list/releases/latest/download/output.csv
 "${here}/fetch_home_readme.sh"
 cat output.csv >> ./required/colleges.csv

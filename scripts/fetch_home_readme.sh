@@ -14,7 +14,6 @@ curl -fsSL -o "${readme}" \
   https://github.com/CollegesChat/university-information/raw/refs/heads/v2/docs/README.md
 
 # 保留 front matter（首行到第二个 "---"），丢掉之前追加过的正文
-awk 'NR == 1 { print; if ($0 == "---") in_fm = 1; next } in_fm { print; if ($0 == "---") exit }' \
-  "${index}" > "${merged}"
+awk 'NR == 1 { print; next } /^---$/ { print; exit } { print }' "${index}" > "${merged}"
 cat "${readme}" >> "${merged}"
-cat "${merged}" > "${index}"
+mv "${merged}" "${index}"
