@@ -48,7 +48,7 @@
     {{ template "menu" . }}
     {{ with getenv "HUGO_OLD_SITE_URL" }}
     <div class="old-version-link">
-      {{ $url := printf "%s%s" (strings.TrimSuffix "/" .) $.RelPermalink }}
+      {{ $url := printf "%s%s" (strings.TrimSuffix "/" .) (or $.Params.old_path $.RelPermalink) }}
       <a href="{{ $url }}" target="_blank" rel="noopener"><span class="icon icon-rotate-cw-clock" aria-hidden="true"></span>返回旧版</a>
     </div>
     {{ end }}
