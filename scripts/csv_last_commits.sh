@@ -8,7 +8,7 @@ last_commit() {
   local ts
   # 取 commit.committer.date（等同 git log -1 --format=%ci），作者时间会被 rebase 改掉
   ts=$(curl -fsS "${API}?path=data/$1&sha=v2&per_page=1" |
-    sed -n '/"committer": {/,/}/s/.*"date": *"\([^"]*\)".*/\1/p' | head -1)
+    jq -er '.[0].commit.committer.date')
   TZ=Asia/Shanghai date -d "${ts}" +'%Y-%m-%d %H:%M:%S'
 }
 
