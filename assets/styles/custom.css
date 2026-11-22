@@ -1,4 +1,26 @@
 /* You can add custom styles here. */
+/* mask 只取 SVG 的 alpha；currentColor 让图标跟随链接色/hover/深色，无需 filter */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: none;
+  background-color: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+          mask: var(--icon) center / contain no-repeat;
+}
+
+.icon-arrow-left { --icon: url("/icons/arrow-left.svg"); }
+.icon-rotate-cw-clock { --icon: url("/icons/rotate-cw-clock.svg"); }
+
+/* 图标与文字间距靠 gap，模板里不留空格；垂直对齐靠 align-items 而非 baseline 微调 */
+.old-version-link a,
+.back-to-home a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
 .book-menu-content {
   display: flex;
   flex-direction: column;
