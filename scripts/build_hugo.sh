@@ -12,16 +12,17 @@ fi
 export PATH="$(pwd)/node_modules/.bin:${PATH}"
 
 # Cloudflare 会给 CF_PAGES_URL，用它覆盖 baseURL；GitHub Pages 没有，走配置里的默认值
+hugo_args=(build --gc --minify -d public)
 if [[ -n "${CF_PAGES_URL:-}" ]]; then
   echo "Found CF_PAGES_URL: ${CF_PAGES_URL}, overriding Hugo baseURL."
-  hugo build --gc --minify -d public -b "${CF_PAGES_URL}"
+  hugo_args+=(-b "${CF_PAGES_URL}")
 else
   echo "CF_PAGES_URL not set, using default baseURL from config file."
-  hugo build --gc --minify -d public
 fi
 
+# 页脚 copyright 用 Hugo 原生环境变量覆盖，不用 sed 改 hugo.yaml
+HUGO_COPYRIGHT="$(scripts/copyright_line.sh)" hugo "${hugo_args[@]}"
+
 echo "Cleaning up output folder..."
-pushd public > /dev/null
-rm -rf asciinema katex
-rm -f mermaid.min.js
-popd > /dev/null
+rm -rf public/asciinema public/katex
+rm -f public/mermaid.min.js

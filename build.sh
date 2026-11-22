@@ -88,11 +88,7 @@ main() {
   echo "Assigning per-province URLs..."
   python3 scripts/assign_province_urls.py
 
-  # 5. 注入时间戳
-  echo "Injecting current build time into hugo.yaml..."
-  scripts/inject_copyright.sh
-
-  # 6. Hugo 编译 + 7. 清理静态文件（与 GitHub Pages workflow 共用）
+  # 5. Hugo 编译（内含 copyright 时间戳）+ 6. 清理静态文件（与 GitHub Pages workflow 共用）
   echo "Building the static website with Hugo..."
   scripts/build_hugo.sh
 

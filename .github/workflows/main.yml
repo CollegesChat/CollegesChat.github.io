@@ -55,8 +55,6 @@ jobs:
       - name: Assign per-province URLs
         # 各省要有独立网址，index.json 才有落点；否则 36 个省全压到 /universities/ 互相覆盖
         run: python3 scripts/assign_province_urls.py
-      - name: Inject Build Time and Copyright
-        run: scripts/inject_copyright.sh
       - name: Build Static Website
         run: scripts/build_hugo.sh
       - name: Setup Pages

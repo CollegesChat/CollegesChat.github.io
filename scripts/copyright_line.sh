@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 输出页脚 copyright 文案：显示构建时间，title 提示 v1/v2 答卷 CSV 的最后提交时间
-# 只输出、不改任何文件；CI 用 sed 写进 hugo.yaml，本地预览用 HUGO_COPYRIGHT 覆盖
+# 只输出、不改任何文件；由 build_hugo.sh 以 HUGO_COPYRIGHT 传给 Hugo
 set -euo pipefail
 
 here=$(cd -- "$(dirname -- "$0")" && pwd)
